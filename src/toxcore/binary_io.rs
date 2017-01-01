@@ -21,6 +21,7 @@
 
 use num_traits::identities::Zero;
 
+
 /// Serialization into bytes.
 pub trait ToBytes {
     /// Serialize into bytes.
@@ -206,6 +207,23 @@ pub fn u64_to_array(num: u64) -> [u8; 8] {
 }
 
 
+/** Make an array of `$len` length from the supplied `$vec`.
+
+Panics if `$len` is bigger than length of `$vec`.
+*/
+macro_rules! to_array {
+    ($vec:expr, $len:expr) => (
+        {
+            let mut ret = [0; $len];
+            for n in 0..$len {
+                ret[n] = $vec[n];
+            }
+            ret
+        }
+    )
+}
+
+
 /** Calculate XOR checksum for 2 [u8; 2].
 
     Used for calculating checksum of ToxId.
@@ -214,4 +232,25 @@ pub fn u64_to_array(num: u64) -> [u8; 8] {
 */
 pub fn xor_checksum(lhs: &[u8; 2], rhs: &[u8; 2]) -> [u8; 2] {
     [lhs[0] ^ rhs[0], lhs[1] ^ rhs[1]]
+}
+
+
+
+// =========== TESTS ===========
+
+// to_array!()
+
+#[test]
+fn to_array_test() {
+    let vec = vec![3, 2, 1];
+    assert_eq!([3], to_array!(vec, 1));
+    assert_eq!([3, 2], to_array!(vec, 2));
+    assert_eq!([3, 2, 1], to_array!(vec, 3));
+}
+
+#[test]
+#[should_panic(expected = "index out of bounds")]
+fn to_array_test_failure() {
+    // requires more elements than there are → panic
+    to_array!(vec![3], 2);
 }

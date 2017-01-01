@@ -558,8 +558,7 @@ impl FromBytes for GetNodes {
                 return parse_error!("Not enough bytes to parse GetNodes id.")
             }
 
-            let id = array_to_u64(&[b[0], b[1], b[2], b[3],
-                                    b[4], b[5], b[6], b[7]]);
+            let id = array_to_u64(&to_array!(b, 8));
             Ok(Parsed(id, &b[8..]))
         }
 
