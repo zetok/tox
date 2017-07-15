@@ -694,7 +694,7 @@ mod test {
     fn tox_codec_decode_test() {
         fn with_dp(dp: DhtPacket, kind: u8) -> TestResult {
             // need an invalid PacketKind for DhtPacket
-            if kind <= PacketKind::SendN as u8 {
+            if PacketKind::parse_bytes(&[kind]).is_done() {
                 return TestResult::discard()
             }
 
