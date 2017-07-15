@@ -81,39 +81,39 @@ pub enum PacketKind {
     Returns `None` if no bytes provided, or first byte doesn't match.
 */
 impl FromBytes for PacketKind {
-    fn parse_bytes(bytes: &[u8]) -> ParseResult<Self> {
-        debug!(target: "PacketKind", "Creating PacketKind from bytes.");
-        trace!(target: "PacketKind", "Bytes: {:?}", bytes);
-        if bytes.is_empty() {
-            return parse_error!("There are 0 bytes!")
-        }
+    // fn parse_bytes(bytes: &[u8]) -> ParseResult<Self> {
+    //     debug!(target: "PacketKind", "Creating PacketKind from bytes.");
+    //     trace!(target: "PacketKind", "Bytes: {:?}", bytes);
+    //     if bytes.is_empty() {
+    //         return parse_error!("There are 0 bytes!")
+    //     }
 
-        let result = match bytes[0] {
-            0   => PacketKind::PingReq,
-            1   => PacketKind::PingResp,
-            2   => PacketKind::GetN,
-            4   => PacketKind::SendN,
-            24  => PacketKind::CookieReq,
-            25  => PacketKind::CookieResp,
-            26  => PacketKind::CryptoHs,
-            27  => PacketKind::CryptoData,
-            32  => PacketKind::DhtReq,
-            33  => PacketKind::LanDisc,
-            128 => PacketKind::OnionReq0,
-            129 => PacketKind::OnionReq1,
-            130 => PacketKind::OnionReq2,
-            131 => PacketKind::AnnReq,
-            132 => PacketKind::AnnResp,
-            133 => PacketKind::OnionDataReq,
-            134 => PacketKind::OnionDataResp,
-            140 => PacketKind::OnionResp3,
-            141 => PacketKind::OnionResp2,
-            142 => PacketKind::OnionResp1,
-            _   => {
-                return parse_error!("Byte can't be parsed as PacketKind!")
-            },
-        };
+    //     let result = match bytes[0] {
+    //         0   => PacketKind::PingReq,
+    //         1   => PacketKind::PingResp,
+    //         2   => PacketKind::GetN,
+    //         4   => PacketKind::SendN,
+    //         24  => PacketKind::CookieReq,
+    //         25  => PacketKind::CookieResp,
+    //         26  => PacketKind::CryptoHs,
+    //         27  => PacketKind::CryptoData,
+    //         32  => PacketKind::DhtReq,
+    //         33  => PacketKind::LanDisc,
+    //         128 => PacketKind::OnionReq0,
+    //         129 => PacketKind::OnionReq1,
+    //         130 => PacketKind::OnionReq2,
+    //         131 => PacketKind::AnnReq,
+    //         132 => PacketKind::AnnResp,
+    //         133 => PacketKind::OnionDataReq,
+    //         134 => PacketKind::OnionDataResp,
+    //         140 => PacketKind::OnionResp3,
+    //         141 => PacketKind::OnionResp2,
+    //         142 => PacketKind::OnionResp1,
+    //         _   => {
+    //             return parse_error!("Byte can't be parsed as PacketKind!")
+    //         },
+    //     };
 
-        Ok(Parsed(result, &bytes[1..]))
-    }
+    //     Ok(Parsed(result, &bytes[1..]))
+    // }
 }

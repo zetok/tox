@@ -11,6 +11,7 @@ num-traits = "0.1"
 sodiumoxide = "0.0.15"
 mio = "0.6"
 byteorder = "1"
+nom = "*"
 
 [dev-dependencies]
 quickcheck = "0.4"

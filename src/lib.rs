@@ -133,6 +133,8 @@ extern crate mio;
 extern crate num_traits;
 extern crate sodiumoxide;
 extern crate byteorder;
+#[macro_use]
+extern crate nom;
 
 
 // TODO: refactor macros
@@ -167,6 +169,7 @@ pub mod toxcore_tests {
 pub mod toxcore {
     #[macro_use]
     pub mod binary_io;
+    pub mod common_parsers;
     pub mod crypto_core;
     pub mod dht;
     pub mod hole_punching;
