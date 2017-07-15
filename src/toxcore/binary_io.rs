@@ -19,6 +19,7 @@
 
 //! Functions for binary IO.
 
+use nom::IResult;
 use num_traits::identities::Zero;
 
 /// Serialization into bytes.
@@ -27,109 +28,37 @@ pub trait ToBytes {
     fn to_bytes(&self) -> Vec<u8>;
 }
 
-/// Parsing result. Provides result and remaining input.
-#[derive(Clone, Debug, Eq, PartialEq)]
-pub struct Parsed<'a, Output>(
-    /// Result.
-    pub Output,
-    /// Remaining input.
-    pub &'a [u8]
-);
-
-/// Parsing error.
-#[derive(Clone, Debug, Eq, PartialEq)]
-pub struct ParseError{
-    target: &'static str,
-    message: String,
-    file: &'static str,
-    line: u32
-}
-
-impl ParseError {
-    /// Create new ParseError
-    pub fn new(target: &'static str, message: String,
-           file: &'static str, line: u32) -> ParseError {
-        ParseError{
-            target: target,
-            message: message,
-            file: file,
-            line: line
-        }
-    }
-}
-
-macro_rules! parse_error {
-    (target: $target:expr, $($arg:tt)*) => (
-        Err(ParseError::new(
-                $target,
-                format!($($arg)*),
-                file!(),
-                line!()))
-    );
-    ($($arg:tt)*) => (parse_error!(target: module_path!(), $($arg)*))
-}
-
 /// Result type for parsing methods
-pub type ParseResult<'a, Output> = Result<Parsed<'a, Output>, ParseError>;
+pub type ParseResult<'a, Output> = IResult<&'a [u8], Output>;
 
-/// Methods for de-serialization from bytes
-// TODO: remove Option<T> types in favour of reworking `ParseResult` into a
-//       real™ `Result` that could be just `ok()`d
+/// De-serialization from bytes.
 pub trait FromBytes: Sized {
-
     /// De-serialize from bytes.
-    fn parse_bytes(bytes: &[u8]) -> ParseResult<Self>;
-
-    /** De-serialize exact `times` entities from bytes.
-
-    Note that even if `Vec<_>` is returned, it still can be empty.
-    */
-    fn parse_bytes_multiple_n(times: usize, bytes: &[u8]) -> ParseResult<Vec<Self>> {
-        debug!("De-serializing multiple ({}) outputs.", times);
-        trace!("With bytes: {:?}", bytes);
-
-        let mut bytes = bytes;
-        let mut result = Vec::with_capacity(times);
-
-        for _ in 0..times {
-            let Parsed(value, rest) = try!(Self::parse_bytes(bytes));
-            bytes = rest;
-            result.push(value);
-        }
-
-        Ok(Parsed(result, bytes))
+    fn parse_bytes(bytes: &[u8]) -> ParseResult<Self> {
+        unimplemented!()
     }
 
-    /** De-serialize as many entities from bytes as posible.
-
-    Note that even if `Vec<_>` is returned, it still can be empty.
-    */
-    fn parse_bytes_multiple(bytes: &[u8]) -> ParseResult<Vec<Self>> {
-        debug!("De-serializing multiple outputs.");
-        trace!("With bytes: {:?}", bytes);
-
-        let mut bytes = bytes;
-        let mut result = Vec::new();
-
-        while let Ok(Parsed(value, rest)) = Self::parse_bytes(bytes) {
-            bytes = rest;
-            result.push(value);
-        }
-
-        Ok(Parsed(result, bytes))
-    }
     /// De-serialize from bytes, or return `None` if de-serialization failed.
     /// Note: `Some` is returned even if there are remaining bytes left.
     fn from_bytes(bytes: &[u8]) -> Option<Self> {
         match Self::parse_bytes(bytes) {
-            Ok(Parsed(value, _)) => Some(value),
-            Err(err) => {
-                debug!("Can't parse bytes. Error: {:?}", err);
+            IResult::Done(_, value) => Some(value),
+            IResult::Error(err) => {
+                error!("Can't parse bytes. Error: {:?}", err);
                 None
-            }
+            },
+            IResult::Incomplete(_) => None
         }
     }
 }
+
+macro_rules! from_bytes (
+    ($name:ident, $submac:ident!( $($args:tt)* )) => (
+        impl FromBytes for $name {
+            named!(parse_bytes<&[u8], Self>, $submac!($($args)*));
+        }
+    );
+);
 
 
 /// Append `0`s to given bytes up to `len`. Panics if `len` is smaller than
