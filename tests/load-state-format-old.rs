@@ -25,7 +25,6 @@ use tox::toxcore::state_format::old::*;
 #[test]
 fn test_state_format_old_load() {
     let bytes = include_bytes!("state-format-old-data/profile-no-friends.tox");
-    assert!(State::is_state(bytes));
     let profile = State::from_bytes(bytes).expect("Works.");
     let profile_b = profile.to_bytes();
     // c-toxcore appends `0`s after EOF because reasons

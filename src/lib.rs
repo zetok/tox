@@ -125,6 +125,8 @@ extern crate byteorder;
 extern crate futures;
 #[macro_use]
 extern crate log;
+#[macro_use]
+extern crate nom;
 // for Zero trait
 extern crate num_traits;
 extern crate sodiumoxide;
@@ -168,10 +170,12 @@ pub mod toxcore_tests {
 pub mod toxcore {
     #[macro_use]
     pub mod binary_io;
+    pub mod common_parsers;
     pub mod crypto_core;
     pub mod dht;
     pub mod dht_node;
     pub mod hole_punching;
+    pub mod iresult_expect;
     pub mod network;
     pub mod packet_kind;
     pub mod state_format;
