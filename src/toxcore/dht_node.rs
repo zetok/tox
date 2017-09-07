@@ -82,14 +82,14 @@ impl DhtNode {
     {
         // request for nodes that are close to our own DHT PK
         let getn_req = GetNodes::new(&self.dht_public_key).as_packet();
-        let shared_secret = &encrypt_precompute(&peer.pk, &self.dht_secret_key);
+        let shared_secret = &encrypt_precompute(peer.pk(), &self.dht_secret_key);
         let nonce = &gen_nonce();
         let dht_packet = DhtPacket::new(shared_secret,
                                         &self.dht_public_key,
                                         nonce,
                                         getn_req).to_bytes();
 
-        let future_send = socket.send_dgram(dht_packet, peer.saddr);
+        let future_send = socket.send_dgram(dht_packet, peer.saddr());
         let (udpsocket, _) = self.reactor.as_mut().run(future_send)?;
         Ok(udpsocket)
     }
