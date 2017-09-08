@@ -992,7 +992,7 @@ pub struct Bucket {
     /// Amount of nodes it can hold.
     capacity: u8,
     /// Nodes that bucket has, sorted by distance to PK.
-    pub nodes: Vec<PackedNode>
+    nodes: Vec<PackedNode>
 }
 
 /// Default number of nodes that bucket can hold.
@@ -1003,18 +1003,26 @@ impl Bucket {
 
     Can hold up to `num` nodes if number is supplied. If `None` is
     supplied, holds up to [`BUCKET_DEFAULT_SIZE`]
-    (./constant.BUCKET_DEFAULT_SIZE.html) nodes.
+    (./constant.BUCKET_DEFAULT_SIZE.html) nodes. If `Some(0)` is
+    supplied, it is treated as `None`.
     */
     pub fn new(num: Option<u8>) -> Self {
         trace!(target: "Bucket", "Creating a new Bucket.");
-        if let Some(n) = num {
-            trace!("Creating a new Bucket with capacity: {}", n);
-            Bucket { capacity: n, nodes: Vec::with_capacity(n as usize) }
-        } else {
-            trace!("Creating a new Bucket with default capacity.");
-            Bucket {
-                capacity: BUCKET_DEFAULT_SIZE as u8,
-                nodes: Vec::with_capacity(BUCKET_DEFAULT_SIZE)
+        match num {
+            None => {
+                trace!("Creating a new Bucket with default capacity.");
+                Bucket {
+                    capacity: BUCKET_DEFAULT_SIZE as u8,
+                    nodes: Vec::with_capacity(BUCKET_DEFAULT_SIZE)
+                }
+            },
+            Some(0) => {
+                error!("Treating Some(0) as None");
+                Bucket::new(None)
+            },
+            Some(n) => {
+                trace!("Creating a new Bucket with capacity: {}", n);
+                Bucket { capacity: n, nodes: Vec::with_capacity(n as usize) }
             }
         }
     }
@@ -1033,45 +1041,43 @@ impl Bucket {
 
     Returns `true` if node was added, `false` otherwise.
     */
-    pub fn try_add(&mut self, pk: &PublicKey, pn: &PackedNode) -> bool {
+    pub fn try_add(&mut self, base_pk: &PublicKey, new_node: &PackedNode) -> bool {
         debug!(target: "Bucket", "Trying to add PackedNode.");
-        trace!(target: "Bucket", "With bucket: {:?}; PK: {:?} and pn: {:?}",
-            self, pk, pn);
+        trace!(target: "Bucket", "With bucket: {:?}; PK: {:?} and new node: {:?}",
+            self, base_pk, new_node);
 
-        if self.nodes.is_empty() {
-            self.nodes.push(*pn);
-            debug!("Bucket was empty, node added.");
-            return true
-        }
-
-        for n in 0..self.nodes.len() {
-            match pk.distance(&pn.pk, &self.nodes[n].pk) {
-                Ordering::Less => {
-                    if self.nodes.len() == self.capacity as usize {
+        match self.nodes.binary_search_by(|node| base_pk.distance(new_node.pk(), node.pk()) ) {
+            Ok(index) => {
+                debug!("Updated: the node was already in the bucket.");
+                drop(self.nodes.remove(index));
+                self.nodes.insert(index, *new_node);
+                true
+            },
+            Err(index) => {
+                if index == self.nodes.len() {
+                    // index is pointing past to the end
+                    if self.is_full() {
+                        debug!("Node is too distant to add to the bucket.");
+                        false
+                    } else {
+                        // distance to the PK was bigger than the other keys, but there's still
+                        // free space in the bucket for a node
+                        debug!("Node inserted at the end of the bucket.");
+                        self.nodes.push(*new_node);
+                        true
+                    }
+                } else {
+                    // index is pointing inside the list
+                    if self.is_full() {
+                        debug!("No free space left in the bucket, the last node removed.");
                         drop(self.nodes.pop());
                     }
-
-                    self.nodes.insert(n, *pn);
-                    return true
-                },
-                Ordering::Equal => {
-                    trace!("Updated: PN was already in the bucket.");
-                    drop(self.nodes.remove(n));
-                    self.nodes.insert(n, *pn);
-                    return true
-                },
-                _ => {},
-            }
+                    debug!("Node inserted inside the bucket.");
+                    self.nodes.insert(index, *new_node);
+                    true
+                }
+            },
         }
-        // distance to the PK was bigger than the other keys, but there's still
-        // "free" space in the bucket for a node, so append at the end
-        if self.nodes.len() < self.capacity as usize {
-            self.nodes.push(*pn);
-            return true
-        }
-
-        debug!("Node is too distant to add to bucket.");
-        false
     }
 
     /** Remove [`PackedNode`](./struct.PackedNode.html) with given PK from the
@@ -1080,15 +1086,21 @@ impl Bucket {
     If there's no `PackedNode` with given PK, nothing is being done.
     */
     // TODO: write test
-    pub fn remove(&mut self, pubkey: &PublicKey) {
-        trace!(target: "Bucket", "Removing PackedNode with PK: {:?}", pubkey);
-        for n in 0..self.nodes.len() {
-            if pubkey == &self.nodes[n].pk {
-                drop(self.nodes.remove(n));
-                return
+    pub fn remove(&mut self, base_pk: &PublicKey, node_pk: &PublicKey) {
+        trace!(target: "Bucket", "Removing PackedNode with PK: {:?}", node_pk);
+        match self.nodes.binary_search_by(|node| base_pk.distance(&node.pk, node.pk()) ) {
+            Ok(index) => {
+                drop(self.nodes.remove(index));
+            },
+            Err(_) => {
+                trace!("No PackedNode to remove with PK: {:?}", node_pk);
             }
         }
-        trace!("Failed to remove PackedNode with PK: {:?}", pubkey);
+    }
+
+    /// Get the capacity of the Bucket.
+    pub fn capacity(&self) -> usize {
+        self.capacity as usize
     }
 
     /** Check if `Bucket` is empty.
@@ -1098,6 +1110,15 @@ impl Bucket {
     */
     pub fn is_empty(&self) -> bool {
         self.nodes.is_empty()
+    }
+
+    /** Check if `Bucket` is full.
+
+    Returns `true` if there is no free space in the `Bucket`, `false`
+    otherwise.
+    */
+    pub fn is_full(&self) -> bool {
+        self.nodes.len() == self.capacity()
     }
 }
 
@@ -1179,12 +1200,12 @@ impl Kbucket {
 
     /// Remove [`PackedNode`](./struct.PackedNode.html) with given PK from the
     /// `Kbucket`.
-    pub fn remove(&mut self, pk: &PublicKey) {
-        trace!(target: "Kbucket", "Removing PK: {:?} from Kbucket: {:?}", pk,
+    pub fn remove(&mut self, node_pk: &PublicKey) {
+        trace!(target: "Kbucket", "Removing PK: {:?} from Kbucket: {:?}", node_pk,
                 self);
         // TODO: optimize using `kbucket_index()` ?
         for i in 0..self.buckets.len() {
-            self.buckets[i].remove(pk);
+            self.buckets[i].remove(&self.pk, node_pk);
         }
     }
 
