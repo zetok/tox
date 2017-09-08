@@ -1230,6 +1230,7 @@ fn bucket_try_add_test() {
                   n7: PackedNode, n8: PackedNode) {
         let pk = PublicKey([0; PUBLICKEYBYTES]);
         let mut node = Bucket::new(None);
+
         assert_eq!(true, node.try_add(&pk, &n1));
         assert_eq!(true, node.try_add(&pk, &n2));
         assert_eq!(true, node.try_add(&pk, &n3));
@@ -1246,6 +1247,36 @@ fn bucket_try_add_test() {
     }
     quickcheck(with_nodes as fn(PackedNode, PackedNode, PackedNode, PackedNode,
                 PackedNode, PackedNode, PackedNode, PackedNode));
+}
+
+#[test]
+#[allow(unused_variables)]
+fn bucket_1_capacity_try_add_test() {
+    fn with_nodes(n1: PackedNode, n2: PackedNode) {
+        let pk = PublicKey([0; PUBLICKEYBYTES]);
+        let mut node = Bucket::new(Some(1));
+
+        assert_eq!(true, node.try_add(&pk, &n1));
+        if (pk.distance(&n1.pk, &n2.pk) == Ordering::Greater) {
+            assert_eq!(false, node.try_add(&pk, &n2));
+        }
+
+        // updating node
+        assert_eq!(true, node.try_add(&pk, &n1));
+
+    }
+    quickcheck(with_nodes as fn(PackedNode, PackedNode));
+}
+
+#[test]
+fn bucket_0_capacity_try_add_test() {
+    fn with_nodes(n1: PackedNode) {
+        let pk = PublicKey([0; PUBLICKEYBYTES]);
+        let mut node = Bucket::new(Some(0));
+
+        assert_eq!(false, node.try_add(&pk, &n1));
+    }
+    quickcheck(with_nodes as fn(PackedNode));
 }
 
 // Bucket::remove()
