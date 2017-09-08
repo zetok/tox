@@ -1232,23 +1232,38 @@ fn kbucket_index_test() {
 // Bucket::new()
 
 #[test]
-fn bucket_new_test() {
+fn bucket_new_none_test() {
+    let bucket1 = Bucket::new(None);
+    assert_eq!(BUCKET_DEFAULT_SIZE, bucket1.capacity());
+
+    // check if always the same with same parameters
+    let bucket2 = Bucket::new(None);
+    assert_eq!(bucket1, bucket2);
+}
+
+#[test]
+fn bucket_new_some_test() {
     fn with_capacity(num: u8) {
-        let default = Bucket::new(None);
-        assert_eq!(BUCKET_DEFAULT_SIZE, default.nodes.capacity());
-        let bucket = Bucket::new(Some(num));
-        assert_eq!(num as usize, bucket.nodes.capacity());
+        if num == 0 {
+            let bucket1 = Bucket::new(Some(num));
+            assert_eq!(BUCKET_DEFAULT_SIZE, bucket1.capacity());
 
-        // check if always the same with same parameters
-        let default2 = Bucket::new(None);
-        assert_eq!(default, default2);
-        let bucket2 = Bucket::new(Some(num));
-        assert_eq!(bucket, bucket2);
+            // check if always the same with same parameters
+            let bucket2 = Bucket::new(Some(num));
+            assert_eq!(bucket1, bucket2);
 
-        if num as usize != BUCKET_DEFAULT_SIZE  {
-            assert!(default != bucket);
+            // check if Some(0) == None
+            assert_eq!(bucket1, Bucket::new(None));
         } else {
-            assert_eq!(default, bucket);
+            let bucket1 = Bucket::new(Some(num));
+            assert_eq!(num as usize, bucket1.capacity());
+
+            // check if always the same with same parameters
+            let bucket2 = Bucket::new(Some(num));
+            assert_eq!(bucket1, bucket2);
+
+            // check if Some(n) != None
+            assert_ne!(bucket1, Bucket::new(None));
         }
     }
     quickcheck(with_capacity as fn(u8));
@@ -1263,6 +1278,7 @@ fn bucket_try_add_test() {
                   n7: PackedNode, n8: PackedNode) {
         let pk = PublicKey([0; PUBLICKEYBYTES]);
         let mut node = Bucket::new(None);
+
         assert_eq!(true, node.try_add(&pk, &n1));
         assert_eq!(true, node.try_add(&pk, &n2));
         assert_eq!(true, node.try_add(&pk, &n3));
@@ -1279,6 +1295,24 @@ fn bucket_try_add_test() {
     }
     quickcheck(with_nodes as fn(PackedNode, PackedNode, PackedNode, PackedNode,
                 PackedNode, PackedNode, PackedNode, PackedNode));
+}
+
+#[test]
+fn bucket_1_capacity_try_add_test() {
+    fn with_nodes(n1: PackedNode, n2: PackedNode) {
+        let pk = PublicKey([0; PUBLICKEYBYTES]);
+        let mut node = Bucket::new(Some(1));
+
+        assert_eq!(true, node.try_add(&pk, &n1));
+        if pk.distance(n1.pk(), n2.pk()) == Ordering::Greater {
+            assert_eq!(false, node.try_add(&pk, &n2));
+        }
+
+        // updating node
+        assert_eq!(true, node.try_add(&pk, &n1));
+
+    }
+    quickcheck(with_nodes as fn(PackedNode, PackedNode));
 }
 
 // Bucket::remove()
