@@ -971,7 +971,7 @@ pub struct Bucket {
     /// Amount of nodes it can hold.
     capacity: u8,
     /// Nodes that bucket has, sorted by distance to PK.
-    pub nodes: Vec<PackedNode>
+    nodes: Vec<PackedNode>
 }
 
 /// Default number of nodes that bucket can hold.
@@ -1017,40 +1017,43 @@ impl Bucket {
         trace!(target: "Bucket", "With bucket: {:?}; PK: {:?} and pn: {:?}",
             self, pk, pn);
 
-        if self.nodes.is_empty() {
-            self.nodes.push(*pn);
-            debug!("Bucket was empty, node added.");
-            return true
+        if self.capacity == 0 {
+            debug!("The capacity of the bucket is 0, no space to add the node");
+            return false
         }
 
-        for n in 0..self.nodes.len() {
-            match pk.distance(&pn.pk, &self.nodes[n].pk) {
-                Ordering::Less => {
-                    if self.nodes.len() == self.capacity as usize {
+        match self.nodes.binary_search_by( |node| pk.distance(&pn.pk, &node.pk)) {
+            Ok(index) => {
+                debug!("Updated: the node was already in the bucket.");
+                drop(self.nodes.remove(index));
+                self.nodes.insert(index, *pn);
+                true
+            },
+            Err(index) => {
+                if index == self.nodes.len() {
+                    // index is pointing past to the end
+                    if self.is_full() {
+                        debug!("Node is too distant to add to the bucket.");
+                        false
+                    } else {
+                        // distance to the PK was bigger than the other keys, but there's still
+                        // free space in the bucket for a node
+                        debug!("Node inserted at the end of the bucket.");
+                        self.nodes.push(*pn);
+                        true
+                    }
+                } else {
+                    // index is pointing inside the list
+                    if self.is_full() {
+                        debug!("No free space left in the bucket, the last node removed.");
                         drop(self.nodes.pop());
                     }
-
-                    self.nodes.insert(n, *pn);
-                    return true
-                },
-                Ordering::Equal => {
-                    trace!("Updated: PN was already in the bucket.");
-                    drop(self.nodes.remove(n));
-                    self.nodes.insert(n, *pn);
-                    return true
-                },
-                _ => {},
-            }
+                    debug!("Node inserted inside the bucket.");
+                    self.nodes.insert(index, *pn);
+                    true
+                }
+            },
         }
-        // distance to the PK was bigger than the other keys, but there's still
-        // "free" space in the bucket for a node, so append at the end
-        if self.nodes.len() < self.capacity as usize {
-            self.nodes.push(*pn);
-            return true
-        }
-
-        debug!("Node is too distant to add to bucket.");
-        false
     }
 
     /** Remove [`PackedNode`](./struct.PackedNode.html) with given PK from the
@@ -1061,13 +1064,19 @@ impl Bucket {
     // TODO: write test
     pub fn remove(&mut self, pubkey: &PublicKey) {
         trace!(target: "Bucket", "Removing PackedNode with PK: {:?}", pubkey);
-        for n in 0..self.nodes.len() {
-            if pubkey == &self.nodes[n].pk {
-                drop(self.nodes.remove(n));
-                return
+        match self.nodes.binary_search_by( |node| pubkey.cmp(&node.pk) ) {
+            Ok(index) => {
+                drop(self.nodes.remove(index));
+            },
+            Err(_) => {
+                trace!("Failed to remove PackedNode with PK: {:?}", pubkey);
             }
         }
-        trace!("Failed to remove PackedNode with PK: {:?}", pubkey);
+    }
+
+    /// Get the capacity of the Bucket.
+    pub fn capacity(&self) -> usize {
+        self.capacity as usize
     }
 
     /** Check if `Bucket` is empty.
@@ -1077,6 +1086,15 @@ impl Bucket {
     */
     pub fn is_empty(&self) -> bool {
         self.nodes.is_empty()
+    }
+
+    /** Check if `Bucket` is full.
+
+    Returns `true` if there are no free space in the `Bucket`, `false`
+    otherwise.
+    */
+    pub fn is_full(&self) -> bool {
+        self.nodes.len() == self.capacity()
     }
 }
 
