@@ -71,6 +71,18 @@ macro_rules! from_bytes (
     );
 );
 
+macro_rules! to_bytes (
+    ($name:ident, $result:ident, $self:ident $body:block ) => {
+        impl ToBytes for $name {
+            fn to_bytes(&$self) -> Vec<u8> {
+                let mut $result = Vec::new();
+                $body
+                $result
+            }
+        }
+    }
+);
+
 
 /// Append `0`s to given bytes up to `len`. Panics if `len` is smaller than
 /// padded `Vec`.

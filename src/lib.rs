@@ -121,12 +121,15 @@ fn main() {
 #![cfg_attr(feature = "clippy", allow(useless_format))]
 #![cfg_attr(feature = "clippy", allow(new_without_default, new_without_default_derive))]
 
+extern crate bytes;
 extern crate byteorder;
 extern crate futures;
 #[macro_use]
 extern crate log;
 #[macro_use]
 extern crate nom;
+#[macro_use]
+extern crate cookie_factory;
 // for Zero trait
 extern crate num_traits;
 extern crate sodiumoxide;
@@ -137,6 +140,7 @@ extern crate quickcheck;
 
 extern crate tokio_core;
 extern crate tokio_proto;
+extern crate tokio_io;
 
 
 // TODO: refactor macros
@@ -170,6 +174,7 @@ pub mod toxcore_tests {
 pub mod toxcore {
     #[macro_use]
     pub mod binary_io;
+    pub mod common_parsers;
     pub mod crypto_core;
     pub mod dht;
     pub mod dht_node;
@@ -178,6 +183,7 @@ pub mod toxcore {
     pub mod packet_kind;
     pub mod state_format;
     pub mod toxid;
+    pub mod tcp;
 }
 
 /// Tox Encrypt Save (a.k.a. **TES**) module. Can be used to ecrypt / decrypt
