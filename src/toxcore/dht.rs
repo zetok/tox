@@ -1097,7 +1097,6 @@ impl Bucket {
 
     If there's no `PackedNode` with given PK, nothing is being done.
     */
-    // TODO: write test
     pub fn remove(&mut self, pubkey: &PublicKey) {
         trace!(target: "Bucket", "Removing PackedNode with PK: {:?}", pubkey);
         for n in 0..self.nodes.len() {

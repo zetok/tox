@@ -37,7 +37,7 @@ use std::net::{
 use std::str::FromStr;
 use byteorder::{ByteOrder, BigEndian, LittleEndian, NativeEndian, WriteBytesExt};
 
-use super::quickcheck::{Arbitrary, Gen, quickcheck, StdGen};
+use super::quickcheck::{Arbitrary, Gen, quickcheck, TestResult, StdGen};
 use super::rand::chacha::ChaChaRng;
 
 
@@ -1285,7 +1285,12 @@ fn bucket_try_add_test() {
 
 #[test]
 fn bucket_remove_test() {
-    fn with_nodes(num: u8, bucket_size: u8, rng_num: usize) {
+    fn with_nodes(num: u8, bucket_size: u8, rng_num: usize) -> TestResult {
+        if bucket_size < num {
+            // FIXME remove after merging https://github.com/zetok/tox/issues/59
+            return TestResult::discard()
+        }
+
         let pk = PublicKey([0; PUBLICKEYBYTES]);
 
         let mut rm_pubkeys: Vec<PublicKey> = Vec::new();
@@ -1298,15 +1303,22 @@ fn bucket_remove_test() {
         for _ in 0..num {
             let node: PackedNode = Arbitrary::arbitrary(&mut rng);
             rm_pubkeys.push(*node.pk());
-            drop(bucket.try_add(&pk, &node));
+            // check there is no such node in the bucket
+            assert_eq!(None, bucket.find(node.pk()));
+            // add the node into the bucket
+            assert!(bucket.try_add(&pk, &node));
+            // check the node was actually added
+            assert_ne!(None, bucket.find(node.pk()));
         }
 
         for pubkey in &rm_pubkeys {
             bucket.remove(pubkey);
+            assert_eq!(None, bucket.find(pubkey));
         }
         assert_eq!(true, bucket.is_empty());
+        TestResult::passed()
     }
-    quickcheck(with_nodes as fn(u8, u8, usize))
+    quickcheck(with_nodes as fn(u8, u8, usize) -> TestResult)
 }
 
 
@@ -1382,16 +1394,33 @@ fn kbucket_try_add_test() {
 
 #[test]
 fn kbucket_remove_test() {
-    // TODO: test for actually removing something
-    fn with_kbucket(kb: Kbucket, remove: usize) {
-        let mut kb = kb;
-        for _ in 0..remove {
-            let pk = nums_to_pk(random_u64(), random_u64(), random_u64(),
-                random_u64());
-            kb.remove(&pk);
+    fn with_nodes(nodes: Vec<PackedNode>) -> TestResult {
+        if nodes.len() > BUCKET_DEFAULT_SIZE {
+            // not all nodes will be inserted if
+            // len > BUCKET_DEFAULT_SIZE
+            return TestResult::discard()
         }
+
+        let pk = nums_to_pk(random_u64(), random_u64(), random_u64(),
+                random_u64());
+
+        let mut kbucket = Kbucket::new(KBUCKET_MAX_ENTRIES, &pk);
+
+        // Fill Kbucked with nodes
+        for node in &nodes {
+            assert_eq!(None, kbucket.find(node.pk()));
+            assert!(kbucket.try_add(node));
+            assert_ne!(None, kbucket.find(node.pk()));
+        }
+
+        // Check for actual removing
+        for node in &nodes {
+            kbucket.remove(node.pk());
+            assert_eq!(None, kbucket.find(node.pk()));
+        }
+        TestResult::passed()
     }
-    quickcheck(with_kbucket as fn(Kbucket, usize));
+    quickcheck(with_nodes as fn(Vec<PackedNode>) -> TestResult);
 }
 
 // Kbucket::get_closest()
