@@ -65,10 +65,6 @@ pub use sodiumoxide::crypto::box_::PRECOMPUTEDKEYBYTES as KEY_LENGTH;
 
 use ::toxcore::crypto_core;
 
-#[cfg(test)]
-use ::toxcore_tests::quickcheck::{quickcheck, TestResult};
-
-
 /// Length (in bytes) of [`MAGIC_NUMBER`](./constant.MAGIC_NUMBER.html).
 pub const MAGIC_LENGTH: usize = 8;
 /** Bytes used to verify whether given data has been encrypted using **TES**.
@@ -446,37 +442,38 @@ impl From<KeyDerivationError> for DecryptionError {
 
 #[test]
 fn pass_key_new_test() {
-    fn with_pw(passwd: Vec<u8>) -> TestResult {
-        // empty password is already tested in docs test
-        if passwd.is_empty() { return TestResult::discard() }
-
+    fn with_pw(passwd: Vec<u8>) {
         let pk = PassKey::new(&passwd).expect("Failed to unwrap PassKey!");
 
         assert!(pk.salt.0.as_ref() != passwd.as_slice());
         assert!(pk.salt.0.as_ref() != [0; SALT_LENGTH].as_ref());
         assert!(pk.key.0.as_ref() != passwd.as_slice());
         assert!(pk.key.0 != [0; KEY_LENGTH]);
-        TestResult::passed()
     }
-    quickcheck(with_pw as fn(Vec<u8>) -> TestResult);
+    // test for an empty passphrase is done in docs
+    with_pw(vec![0]);
+    with_pw(vec![1]);
+    with_pw(vec![0; 42]);
+    with_pw(vec![1; 42]);
+    with_pw(b"mysuperpass".to_vec());
 }
 
 // PassKey::with_salt()
 
 #[test]
 fn pass_key_with_salt_test() {
-    fn with_pw(passwd: Vec<u8>) -> TestResult {
-        // test for an empty passphrase is done in docs test
-        if passwd.is_empty() { return TestResult::discard() }
-
+    fn with_pw(passwd: Vec<u8>) {
         let salt = gen_salt();
-        let pk = PassKey::with_salt(&passwd, salt)
-                    .expect("Failed to unwrap PassKey!");
+        let pk = PassKey::with_salt(&passwd, salt).unwrap();
 
         assert_eq!(&*pk.salt, &salt);
         assert!(pk.key.0.as_ref() != passwd.as_slice());
         assert!(pk.key.0 != [0; KEY_LENGTH]);
-        TestResult::passed()
     }
-    quickcheck(with_pw as fn(Vec<u8>) -> TestResult);
+    // test for an empty passphrase is done in docs
+    with_pw(vec![0]);
+    with_pw(vec![1]);
+    with_pw(vec![0; 42]);
+    with_pw(vec![1; 42]);
+    with_pw(b"mysuperpass".to_vec());
 }

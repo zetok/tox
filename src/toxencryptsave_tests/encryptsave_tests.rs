@@ -19,88 +19,60 @@
 */
 
 
-use super::quickcheck::{
-    Arbitrary,
-    Gen,
-    quickcheck,
-    TestResult,
-};
+use super::quickcheck::quickcheck;
 
 use toxencryptsave::*;
 
+use sodiumoxide::randombytes::randombytes;
 
 // PassKey::
-
-impl Arbitrary for PassKey {
-    fn arbitrary<G: Gen>(g: &mut G) -> Self {
-        let up_to_range = g.gen_range(2, 1000000);
-        let mut passwd = Vec::with_capacity(up_to_range);
-        for _ in 1..up_to_range {
-            passwd.push(g.gen());
-        }
-        PassKey::new(&passwd).expect("Failed to unwrap PassKey!")
-    }
-}
 
 // PassKey::encrypt()
 
 #[test]
 fn pass_key_encrypt_test() {
-    fn with_data(plain: Vec<u8>, passk: PassKey) -> TestResult {
-        // test for empty data is done in docs test
-        // TODO: test can fail with small amounts of data – change it to
-        //       require bigger minimal amount of data, and note in the
-        //       encryption docs that encrypted data is guaranteed to differ
-        //       from plaintext only for amounts of data bigger than just a few
-        //       bytes
-        if plain.is_empty() { return TestResult::discard() }
-
-        let encrypted = passk.encrypt(&plain).expect("Encrypting failed!");
-        assert_eq!(plain.len() + EXTRA_LENGTH, encrypted.len());
-        assert!(plain.as_slice() != &encrypted[EXTRA_LENGTH..]);
-        assert_eq!(plain, passk.decrypt(&encrypted).expect("Decrypting failed"));
-        TestResult::passed()
-    }
-    quickcheck(with_data as fn(Vec<u8>, PassKey) -> TestResult);
+    let plaintext = randombytes(16);
+    let passphrase = randombytes(16);
+    let pk = PassKey::new(&passphrase).expect("Failed to unwrap PassKey!");
+    // test for empty data is done in docs test
+    let encrypted = pk.encrypt(&plaintext).expect("Encrypting failed!");
+    assert_eq!(plaintext.len() + EXTRA_LENGTH, encrypted.len());
+    assert!(plaintext.as_slice() != &encrypted[EXTRA_LENGTH..]);
+    assert_eq!(plaintext, pk.decrypt(&encrypted).expect("Decrypting failed"));
 }
 
 // PassKey::decrypt()
 
 #[test]
 fn pass_key_decrypt_test() {
-    fn with_data(plain: Vec<u8>, passk: PassKey) -> TestResult {
-        // need some valid data for encryption to test with
-        // + empty encrypted data is tested in docs test
-        if plain.is_empty() { return TestResult::discard() }
+    let plaintext = randombytes(16);
+    let passphrase = randombytes(16);
+    let pk = PassKey::new(&passphrase).expect("Failed to unwrap PassKey!");
 
-        let encrypted = passk.encrypt(&plain).expect("Encrypting failed!");
+    let encrypted = pk.encrypt(&plaintext).expect("Encrypting failed!");
 
-        // decrypting should just work™
-        assert_eq!(&plain, &passk.decrypt(&encrypted).expect("Decrypting failed!"));
+    // decrypting should just work™
+    assert_eq!(&plaintext, &pk.decrypt(&encrypted).expect("Decrypting failed!"));
 
-        // check if fails if one of `MAGIC_NUMBER` bytes is wrong
-        for pos in 0..MAGIC_LENGTH {
-            let mut ec = encrypted.clone();
-            if ec[pos] == 0 { ec[pos] = 1; } else { ec[pos] = 0; }
-            assert_eq!(Err(DecryptionError::BadFormat), passk.decrypt(&ec));
-        }
-
-        // check if fails if a data byte is wrong
-        for pos in EXTRA_LENGTH..encrypted.len() {
-            let mut ec = encrypted.clone();
-            if ec[pos] == 0 { ec[pos] = 1; } else { ec[pos] = 0; }
-            assert_eq!(Err(DecryptionError::Failed), passk.decrypt(&ec));
-        }
-
-        // fails if not enough bytes?
-        for n in 1..EXTRA_LENGTH {
-            assert_eq!(Err(DecryptionError::InvalidLength),
-                    passk.decrypt(&encrypted[..EXTRA_LENGTH - n]));
-        }
-
-        TestResult::passed()
+    // check if fails if one of `MAGIC_NUMBER` bytes is wrong
+    for pos in 0..MAGIC_LENGTH {
+        let mut ec = encrypted.clone();
+        if ec[pos] == 0 { ec[pos] = 1; } else { ec[pos] = 0; }
+        assert_eq!(Err(DecryptionError::BadFormat), pk.decrypt(&ec));
     }
-    quickcheck(with_data as fn(Vec<u8>, PassKey) -> TestResult);
+
+    // check if fails if a data byte is wrong
+    for pos in EXTRA_LENGTH..encrypted.len() {
+        let mut ec = encrypted.clone();
+        if ec[pos] == 0 { ec[pos] = 1; } else { ec[pos] = 0; }
+        assert_eq!(Err(DecryptionError::Failed), pk.decrypt(&ec));
+    }
+
+    // fails if not enough bytes?
+    for n in 1..EXTRA_LENGTH {
+        assert_eq!(Err(DecryptionError::InvalidLength),
+                pk.decrypt(&encrypted[..EXTRA_LENGTH - n]));
+    }
 }
 
 
@@ -123,35 +95,20 @@ fn is_encrypted_test() {
 
 #[test]
 fn pass_encrypt_test() {
-    fn with_data_pass(data: Vec<u8>, pass: Vec<u8>) -> TestResult {
-        // tested for empty data / passphrase in docs test
-        if data.is_empty() || pass.is_empty() {
-            return TestResult::discard()
-        }
+    let plaintext = randombytes(16);
+    let passphrase = randombytes(16);
 
-        let encrypted = pass_encrypt(&data, &pass)
-            .expect("Failed to unwrap pass_encrypt!");
-        assert!(is_encrypted(&encrypted));
+    let encrypted = pass_encrypt(&plaintext, &passphrase)
+        .expect("Failed to unwrap pass_encrypt!");
+    assert!(is_encrypted(&encrypted));
 
-        assert_eq!(data.len() + EXTRA_LENGTH, encrypted.len());
-        assert_eq!(data, pass_decrypt(&encrypted, &pass)
-                            .expect("Failed to pass_decrypt!"));
+    assert_eq!(plaintext.len() + EXTRA_LENGTH, encrypted.len());
+    assert_eq!(plaintext, pass_decrypt(&encrypted, &passphrase)
+                        .expect("Failed to pass_decrypt!"));
 
-        let encrypted2 = pass_encrypt(&data, &pass)
-            .expect("Failed to unwrap pass_encrypt 2!");
-        assert!(encrypted != encrypted2);
-
-        TestResult::passed()
-    }
-    quickcheck(with_data_pass as fn(Vec<u8>, Vec<u8>) -> TestResult);
-
-    {
-        use sodiumoxide::randombytes::randombytes;
-
-        let plaintext = randombytes(16);
-        let passphrase = randombytes(16);
-        with_data_pass(plaintext, passphrase);
-    }
+    let encrypted2 = pass_encrypt(&plaintext, &passphrase)
+        .expect("Failed to unwrap pass_encrypt 2!");
+    assert!(encrypted != encrypted2);
 }
 
 
