@@ -99,7 +99,7 @@ macro_rules! impls_for_pings {
             }
         }
 
-        /** De-seralize from bytes. Tries to parse first
+        /** De-serialize from bytes. Tries to parse first
         [`PING_SIZE`](./constant.PING_SIZE.html) bytes from supplied slice
         as `Ping`.
         */
