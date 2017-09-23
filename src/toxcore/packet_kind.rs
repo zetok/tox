@@ -25,8 +25,9 @@
     * [`dht`](../dht/index.html)
 */
 
+use nom::le_u8;
+
 use toxcore::binary_io::*;
-use toxcore::common_parsers::*;
 
 
 /** Top-level packet kind names and their associated numbers.
@@ -81,7 +82,7 @@ pub enum PacketKind {
 
     Returns `None` if no bytes provided, or first byte doesn't match.
 */
-from_bytes!(PacketKind, switch!(ne_u8,
+from_bytes!(PacketKind, switch!(le_u8,
     0   => value!(PacketKind::PingReq) |
     1   => value!(PacketKind::PingResp) |
     2   => value!(PacketKind::GetN) |

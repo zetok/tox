@@ -22,10 +22,9 @@
 
 use std::default::Default;
 use byteorder::{BigEndian, ByteOrder, LittleEndian, WriteBytesExt};
-use nom::{be_u16, le_u16, le_u32, le_u64, rest};
+use nom::{be_u16, le_u16, le_u8, le_u32, le_u64, rest};
 
 use toxcore::binary_io::*;
-use toxcore::common_parsers::*;
 use toxcore::crypto_core::*;
 use toxcore::dht::*;
 use toxcore::toxid::{NoSpam, NOSPAMBYTES};
@@ -521,7 +520,7 @@ for i in 5..256 {
 }
 ```
 */
-from_bytes!(FriendStatus, switch!(ne_u8,
+from_bytes!(FriendStatus, switch!(le_u8,
     0 => value!(FriendStatus::NotFriend) |
     1 => value!(FriendStatus::Added) |
     2 => value!(FriendStatus::FrSent) |
@@ -558,7 +557,7 @@ impl Default for UserStatus {
     }
 }
 
-from_bytes!(UserStatus, switch!(ne_u8,
+from_bytes!(UserStatus, switch!(le_u8,
     0 => value!(UserStatus::Online) |
     1 => value!(UserStatus::Away) |
     2 => value!(UserStatus::Busy)

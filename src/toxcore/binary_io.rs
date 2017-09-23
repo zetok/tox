@@ -19,7 +19,8 @@
 
 //! Functions for binary IO.
 
-use nom::IResult;
+use byteorder::{ByteOrder, NativeEndian};
+use nom::{IResult, Needed};
 use num_traits::identities::Zero;
 
 /// Serialization into bytes.
@@ -83,6 +84,17 @@ pub fn append_zeros<T: Clone + Zero>(v: &mut Vec<T>, len: usize) {
 */
 pub fn xor_checksum(lhs: &[u8; 2], rhs: &[u8; 2]) -> [u8; 2] {
     [lhs[0] ^ rhs[0], lhs[1] ^ rhs[1]]
+}
+
+/// Recognizes native endian unsigned 8 bytes integer
+#[inline]
+pub fn ne_u64(i: &[u8]) -> IResult<&[u8], u64> {
+    if i.len() < 8 {
+        IResult::Incomplete(Needed::Size(8))
+    } else {
+        let res = NativeEndian::read_u64(i);
+        IResult::Done(&i[8..], res)
+    }
 }
 
 /// Adds an expect method.

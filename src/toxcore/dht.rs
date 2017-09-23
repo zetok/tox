@@ -39,10 +39,9 @@ use std::net::{
 };
 use std::ops::Deref;
 use byteorder::{BigEndian, LittleEndian, NativeEndian, WriteBytesExt};
-use nom::{be_u16, le_u16, rest};
+use nom::{be_u16, le_u8, le_u16, rest};
 
 use toxcore::binary_io::*;
-use toxcore::common_parsers::*;
 use toxcore::crypto_core::*;
 use toxcore::packet_kind::PacketKind;
 
@@ -187,7 +186,7 @@ pub enum IpType {
 
 /// Match first byte from the provided slice as `IpType`. If no match found,
 /// return `None`.
-from_bytes!(IpType, switch!(ne_u8,
+from_bytes!(IpType, switch!(le_u8,
     2   => value!(IpType::U4) |
     10  => value!(IpType::U6) |
     130 => value!(IpType::T4) |
@@ -563,7 +562,7 @@ impl ToBytes for SendNodes {
     Returns `None` if bytes can't be parsed into `SendNodes`.
 */
 from_bytes!(SendNodes, do_parse!(
-    nodes_number: ne_u8 >>
+    nodes_number: le_u8 >>
     nodes: cond_reduce!(
         nodes_number > 0 && nodes_number <= 4,
         count!(PackedNode::parse_bytes, nodes_number as usize)
