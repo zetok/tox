@@ -1161,6 +1161,7 @@ impl Kbucket {
     pub fn get_closest(&self, pk: &PublicKey) -> Vec<PackedNode> {
         debug!(target: "Kbucket", "Getting closest nodes.");
         trace!(target: "Kbucket", "With PK: {:?} and self: {:?}", pk, self);
+        // TODO: optimize
         // create a new Bucket with associated pk, and add nodes that are close
         // to the PK
         let mut bucket = Bucket::new(Some(4));
