@@ -5,7 +5,7 @@ authors = ["Zetok Zalbavar <zetok@openmailbox.org>"]
 
 
 [dependencies]
-clippy = { version = "*", optional = true }
+clippy = { version = "^0.0.164", optional = true }
 bytes = "^0.4"
 byteorder = "1"
 futures = "^0.1"
