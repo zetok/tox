@@ -151,25 +151,26 @@ mod tests {
         let mut alice_codec = Codec::new(alice_channel);
         let mut bob_codec = Codec::new(bob_channel);
 
-        fn check_packet(buf: &mut BytesMut, alice_codec: &mut Codec, bob_codec: &mut Codec, packet: Packet) {
-            alice_codec.encode(packet.clone(), buf).expect("Alice should encode");
-            let res = bob_codec.decode(buf).unwrap().expect("Bob should decode");
+        let test_packets = vec![
+            Packet::RouteRequest( RouteRequest { peer_pk: pk } ),
+            Packet::RouteResponse( RouteResponse { connection_id: 42, pk: pk } ),
+            Packet::ConnectNotification( ConnectNotification { connection_id: 42 } ),
+            Packet::DisconnectNotification( DisconnectNotification { connection_id: 42 } ),
+            Packet::PingRequest( PingRequest { ping_id: 4242 } ),
+            Packet::PongResponse( PongResponse { ping_id: 4242 } ),
+            Packet::OobSend( OobSend { destination_pk: pk, data: vec![13; 42] } ),
+            Packet::OobReceive( OobReceive { sender_pk: pk, data: vec![13; 24] } ),
+            Packet::Data( Data { connection_id: 42, data: vec![13; 2031] } )
+        ];
+        for packet in test_packets {
+            alice_codec.encode(packet.clone(), &mut buf).expect("Alice should encode");
+            let res = bob_codec.decode(&mut buf).unwrap().expect("Bob should decode");
             assert_eq!(packet, res);
 
-            bob_codec.encode(packet.clone(), buf).expect("Bob should encode");
-            let res = alice_codec.decode(buf).unwrap().expect("Alice should decode");
+            bob_codec.encode(packet.clone(), &mut buf).expect("Bob should encode");
+            let res = alice_codec.decode(&mut buf).unwrap().expect("Alice should decode");
             assert_eq!(packet, res);
         }
-
-        check_packet(&mut buf, &mut alice_codec, &mut bob_codec, Packet::RouteRequest( RouteRequest { peer_pk: pk } ) );
-        check_packet(&mut buf, &mut alice_codec, &mut bob_codec, Packet::RouteResponse( RouteResponse { connection_id: 42, pk: pk } ) );
-        check_packet(&mut buf, &mut alice_codec, &mut bob_codec, Packet::ConnectNotification( ConnectNotification { connection_id: 42 } ) );
-        check_packet(&mut buf, &mut alice_codec, &mut bob_codec, Packet::DisconnectNotification( DisconnectNotification { connection_id: 42 } ) );
-        check_packet(&mut buf, &mut alice_codec, &mut bob_codec, Packet::PingRequest( PingRequest { ping_id: 4242 } ) );
-        check_packet(&mut buf, &mut alice_codec, &mut bob_codec, Packet::PongResponse( PongResponse { ping_id: 4242 } ) );
-        check_packet(&mut buf, &mut alice_codec, &mut bob_codec, Packet::OobSend( OobSend { destination_pk: pk, data: vec![13; 42] } ) );
-        check_packet(&mut buf, &mut alice_codec, &mut bob_codec, Packet::OobReceive( OobReceive { sender_pk: pk, data: vec![13; 24] } ) );
-        check_packet(&mut buf, &mut alice_codec, &mut bob_codec, Packet::Data( Data { connection_id: 42, data: vec![13; 2031] } ) );
     }
     #[test]
     fn decode_encrypted_packet_incomplete() {
