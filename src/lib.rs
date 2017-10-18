@@ -174,7 +174,6 @@ pub mod toxcore_tests {
 pub mod toxcore {
     #[macro_use]
     pub mod binary_io;
-    pub mod common_parsers;
     pub mod crypto_core;
     pub mod dht;
     pub mod dht_node;
