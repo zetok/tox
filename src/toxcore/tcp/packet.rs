@@ -437,7 +437,7 @@ impl ToBytes for OobSend {
 OOB recv are sent with the announced public key of the peer that sent the
 OOB send packet and the exact data.
 
-Packet type [`Kind::OobSend`](./enum.Kind.html).
+Packet type [`Kind::OobReceive`](./enum.Kind.html).
 
 Serialized form:
 
