@@ -50,10 +50,10 @@ pub enum Packet {
     OobSend(OobSend),
     /// [`OobReceive`](./struct.OobReceive.html) structure.
     OobReceive(OobReceive),
+    /// [`OnionRequest`](./struct.OnionRequest.html) structure.
+    OnionRequest(OnionRequest),
     /// TODO
-    //OnionDataRequest,
-    /// TODO
-    //OnionDataResponse,
+    //OnionResponse,
     /// [`Data`](./struct.Data.html) structure.
     Data(Data)
 }
@@ -71,6 +71,7 @@ impl FromBytes for Packet {
         map!(PongResponse::from_bytes, Packet::PongResponse) |
         map!(OobSend::from_bytes, Packet::OobSend) |
         map!(OobReceive::from_bytes, Packet::OobReceive) |
+        map!(OnionRequest::from_bytes, Packet::OnionRequest) |
         map!(Data::from_bytes, Packet::Data)
     ));
 }
@@ -86,6 +87,7 @@ impl ToBytes for Packet {
             Packet::PongResponse(ref p) => p.to_bytes(buf),
             Packet::OobSend(ref p) => p.to_bytes(buf),
             Packet::OobReceive(ref p) => p.to_bytes(buf),
+            Packet::OnionRequest(ref p) => p.to_bytes(buf),
             Packet::Data(ref p) => p.to_bytes(buf),
         }
     }
@@ -468,6 +470,49 @@ impl ToBytes for OobReceive {
         do_gen!(buf,
             gen_be_u8!(0x07) >>
             gen_slice!(self.sender_pk.as_ref()) >>
+            gen_slice!(self.data)
+        )
+    }
+}
+
+/** Sent by client or relay server to server or further relay server.
+Same format as initial UDP onion packet 0x80 (from chapter 11), but TCP packet id is 0x08 instead.
+
+Packet type [`Kind::OnionRequest`](./enum.Kind.html).
+
+
+Serialized form:
+
+Length   | Content
+-------- | ------
+`1`      | 0x08
+`32`     | Nonce
+`32`     | Our Temporary DHT Key
+variable | Encrypted 0x81 UDP payload for "Node B" in the Onion path
+*/
+
+#[derive(Debug, PartialEq, Clone)]
+pub struct OnionRequest {
+    /// Public Key of the sender
+    pub nonce: Nonce,
+    /// OOB data packet
+    pub data: Vec<u8>
+}
+
+impl FromBytes for OnionRequest {
+    named!(from_bytes<OnionRequest>, do_parse!(
+        tag!("\x08") >>
+        nonce: call!(Nonce::from_bytes) >>
+        data: rest >>
+        (OnionRequest { nonce: nonce, data: data.to_vec() })
+    ));
+}
+
+impl ToBytes for OnionRequest {
+    fn to_bytes<'a>(&self, buf: (&'a mut [u8], usize)) -> Result<(&'a mut [u8], usize), GenError> {
+        do_gen!(buf,
+            gen_be_u8!(0x08) >>
+            gen_slice!(self.nonce.as_ref()) >>
             gen_slice!(self.data)
         )
     }
