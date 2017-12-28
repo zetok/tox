@@ -143,7 +143,7 @@ impl Client {
     /** Send a packet. This method does not ignore IO error
     */
     fn send(&self, packet: Packet) -> IoFuture<()> {
-        Box::new(self.send_impl(packet))
+        self.send_impl(packet)
     }
     /** Send a packet. This method ignores IO error
     */
