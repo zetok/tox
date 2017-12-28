@@ -88,7 +88,7 @@ impl Server {
         } else {
             return Box::new( future::err(
                 Error::new(ErrorKind::Other,
-                    "Can'not find client by pk to shutdown it"
+                    "Cannot find client by pk to shutdown it"
             )))
         };
         let notifications = client.iter_links()
@@ -124,8 +124,7 @@ impl Server {
                     // send RouteResponse(0) if client requests its own pk
                     return client.send_route_response(pk, 0)
                 }
-                let index = client.get_connection_id(&packet.peer_pk);
-                if let Some(index) = index {
+                if let Some(index) = client.get_connection_id(&packet.peer_pk) {
                     // send RouteResponse(index + 16) if client was already linked to pk
                     return client.send_route_response(&packet.peer_pk, index + 16)
                 } else {
