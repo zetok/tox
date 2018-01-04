@@ -92,20 +92,20 @@ impl Server {
             )))
         };
         let notifications = client_a.iter_links()
-            // foreach link that is Some(other_pk)
+            // foreach link that is Some(client_b_pk)
             .filter_map(|&client_b_pk| client_b_pk)
             .map(|client_b_pk| {
                 if let Some(client_b) = self.connected_clients.borrow().get(&client_b_pk) {
-                    // check if current pk is linked in other_pk
-                    if let Some(a_id_in_client_b) = client_b.get_connection_id(pk).map(|x| x + 16) {
-                        // it is linked, we should notify other_client
+                    // check if client_a is linked in client_b
+                    if let Some(a_id_in_client_b) = client_b.get_connection_id(pk) {
+                        // it is linked, we should notify client_b
                         client_b.send_disconnect_notification(a_id_in_client_b)
                     } else {
-                        // Current client is not linked in other_pk
+                        // Current client is not linked in client_b
                         Box::new( future::ok(()) )
                     }
                 } else {
-                    // other_client is not connected to the server
+                    // client_b is not connected to the server
                     Box::new( future::ok(()) )
                 }
             });
@@ -124,8 +124,8 @@ impl Server {
                     return client_a.send_route_response(pk, 0)
                 }
                 if let Some(b_id_in_client_a) = client_a.get_connection_id(&packet.peer_pk) {
-                    // send RouteResponse(index + 16) if client was already linked to pk
-                    return client_a.send_route_response(&packet.peer_pk, b_id_in_client_a + 16)
+                    // send RouteResponse if client was already linked to pk
+                    return client_a.send_route_response(&packet.peer_pk, b_id_in_client_a)
                 } else {
                     // try to insert new link into client.links
                     if let Some(b_id_in_client_a) = client_a.insert_connection_id(&packet.peer_pk) {
@@ -150,22 +150,22 @@ impl Server {
                 // the are both linked, send RouteResponse and
                 // send each other ConnectNotification
                 // we don't care if connect notifications fail
-                let client_a_notification = client_a.send_connect_notification(b_id_in_client_a + 16);
-                let client_b_notification = client_b.send_connect_notification(a_id_in_client_b + 16);
+                let client_a_notification = client_a.send_connect_notification(b_id_in_client_a);
+                let client_b_notification = client_b.send_connect_notification(a_id_in_client_b);
                 return Box::new(
-                    client_a.send_route_response(&packet.peer_pk, b_id_in_client_a + 16)
+                    client_a.send_route_response(&packet.peer_pk, b_id_in_client_a)
                         .join(client_a_notification)
                         .join(client_b_notification)
                         .map(|_| ())
                 )
             } else {
                 // they are not linked
-                // send RouteResponse(index + 16) only to current client
-                client_a.send_route_response(&packet.peer_pk, b_id_in_client_a + 16)
+                // send RouteResponse only to current client
+                client_a.send_route_response(&packet.peer_pk, b_id_in_client_a)
             }
         } else {
-            // send RouteResponse(index + 16) only to current client
-            client_a.send_route_response(&packet.peer_pk, b_id_in_client_a + 16)
+            // send RouteResponse only to current client
+            client_a.send_route_response(&packet.peer_pk, b_id_in_client_a)
         }
     }
     fn handle_route_response(&self, _pk: &PublicKey, _packet: RouteResponse) -> IoFuture<()> {
@@ -191,7 +191,7 @@ impl Server {
             if let Some(client_a) = clients.get_mut(pk) {
                 // unlink other_pk from client.links if any
                 // and return previous value
-                if let Some(client_b_pk) = client_a.take_link(packet.connection_id - 16) {
+                if let Some(client_b_pk) = client_a.take_link(packet.connection_id) {
                     client_b_pk
                 } else {
                     return Box::new( future::err(
@@ -209,16 +209,16 @@ impl Server {
 
         if let Some(client_b) = clients.get_mut(&client_b_pk) {
             if let Some(a_id_in_client_b) = client_b.get_connection_id(pk) {
-                // unlink pk from other_client it and send notification
+                // unlink pk from client_b it and send notification
                 client_b.take_link(a_id_in_client_b);
-                client_b.send_disconnect_notification(a_id_in_client_b + 16)
+                client_b.send_disconnect_notification(a_id_in_client_b)
             } else {
                 // Do nothing because
-                // other_client has not sent RouteRequest yet to connect to this client
+                // client_b has not sent RouteRequest yet to connect to client_a
                 Box::new( future::ok(()) )
             }
         } else {
-            // other_client is not connected to the server, so ignore it
+            // client_b is not connected to the server, so ignore DisconnectNotification
             Box::new( future::ok(()) )
         }
     }
@@ -273,7 +273,7 @@ impl Server {
         if let Some(client_b) = clients.get(&packet.destination_pk) {
             client_b.send_oob(pk, packet.data)
         } else {
-            // Do nothing because there is no other_client connected to server
+            // Do nothing because client_b is not connected to server
             Box::new( future::ok(()) )
         }
     }
@@ -293,7 +293,7 @@ impl Server {
         let clients = self.connected_clients.borrow();
         let client_b_pk = {
             if let Some(client_a) = clients.get(pk) {
-                if let Some(client_b_pk) = client_a.get_link(packet.connection_id - 16) {
+                if let Some(client_b_pk) = client_a.get_link(packet.connection_id) {
                     client_b_pk
                 } else {
                     return Box::new( future::err(
@@ -309,15 +309,15 @@ impl Server {
             }
         };
         if let Some(client_b) = clients.get(&client_b_pk) {
-            if let Some(a_id_in_client_b) = client_b.get_connection_id(pk).map(|x| x + 16) {
+            if let Some(a_id_in_client_b) = client_b.get_connection_id(pk) {
                 client_b.send_data(a_id_in_client_b, packet.data)
             } else {
                 // Do nothing because
-                // other_client has not sent RouteRequest yet to connect to this client
+                // client_b has not sent RouteRequest yet to connect to client_a
                 Box::new( future::ok(()) )
             }
         } else {
-            // Do nothing because there is no other_client connected to server
+            // Do nothing because client_b is not connected to server
             Box::new( future::ok(()) )
         }
     }
