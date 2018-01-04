@@ -46,7 +46,10 @@ pub struct Client {
     A client requests to link him with another client by PK with RouteRequest.
     The server inserts that PK into links and gives the index of the link back to client
     via RouteResponse. Now the client may use this index to communicate with the connection
-    using that index, e.g. send Data by index.
+    using that index, e.g. send Data by index. Our links are 0-based while wire indices are
+    16-based. E.g. `::get_connection_id` and `::insert_connection_id` return `Some(x+16)`,
+    `::get_link` and `::take_link` accept ids in `[0; 240) + 16`. All conversions are done only
+    inside this module.
     */
     links: [Option<PublicKey>; 240],
     /// Used to check whether PongResponse is correct
@@ -79,17 +82,17 @@ impl Client {
 
     /** Return index of of the link by PK
 
-    Some(index) if link exists
+    Some(index + 16) if link exists
 
     None if there is no such PK linked to this client
     */
     pub fn get_connection_id(&self, to: &PublicKey) -> Option<u8> {
-        self.links.iter().position(|&link| link == Some(*to)).map(|x| x as u8)
+        self.links.iter().position(|&link| link == Some(*to)).map(|x| x as u8).map(|x| x + 16)
     }
 
     /** Try to link PK.
 
-    Some(index) if has been inserted or link existed
+    Some(index + 16) if has been inserted or link existed
 
     None if no free space to insert
     */
@@ -99,7 +102,7 @@ impl Client {
             None => {
                 if let Some(index) = self.links.iter().position(|link| link.is_none()) {
                     self.links[index] = Some(*to);
-                    Some(index as u8)
+                    Some(index as u8).map(|x| x + 16)
                 } else {
                     None
                 }
@@ -107,17 +110,18 @@ impl Client {
         }
     }
 
-    /** Get link by connection_id. Ensure connection_id [0; 240)
+    /** Get link by connection_id.
+    Ensure connection_id [0; 240) + 16
     */
     pub fn get_link(&self, connection_id: u8) -> Option<PublicKey> {
-        self.links[connection_id as usize]
+        self.links[connection_id as usize - 16]
     }
 
     /** Get link by connection_id and remove it from contaiter.
-    Ensure connection_id [0; 240)
+    Ensure connection_id [0; 240) + 16
     */
     pub fn take_link(&mut self, connection_id: u8) -> Option<PublicKey> {
-        self.links[connection_id as usize].take()
+        self.links[connection_id as usize - 16].take()
     }
 
     /** Iter over each link in links of the Client
