@@ -158,6 +158,7 @@ mod tests {
             Packet::PongResponse( PongResponse { ping_id: 4242 } ),
             Packet::OobSend( OobSend { destination_pk: pk, data: vec![13; 42] } ),
             Packet::OobReceive( OobReceive { sender_pk: pk, data: vec![13; 24] } ),
+            Packet::OnionRequest( OnionRequest { nonce: nonce, sender_pk: pk, data vec![13; 42] } ),
             Packet::Data( Data { connection_id: 42, data: vec![13; 2031] } )
         ];
         for packet in test_packets {
