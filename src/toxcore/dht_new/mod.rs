@@ -27,3 +27,4 @@ pub mod packet;
 pub mod binary_io;
 pub mod kbucket;
 pub mod packed_node;
+pub mod codec;
