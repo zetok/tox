@@ -41,19 +41,6 @@ impl DhtPacketCodec {
     pub fn new(channel: Channel) -> DhtPacketCodec {
         DhtPacketCodec { channel: channel }
     }
-
-    fn decrypt_dht_payload(&self, local_stack: &mut BytesMut) -> Vec<u8> {
-        let payload = local_stack.split_off(DHT_PACKET_HEADER_SIZE);
-        self.channel.decrypt(&payload[..])
-        .map_err(|_|
-            Error::new(ErrorKind::Other, "EncryptedDhtPacket decrypt failed")
-        ).unwrap()
-    }
-    
-    fn encrypt_dht_payload(&self, buf: &mut BytesMut, packet_buf: &[u8], packet_size: usize) -> Vec<u8> {
-        buf.split_off(DHT_PACKET_HEADER_SIZE);
-        self.channel.encrypt(&packet_buf[DHT_PACKET_HEADER_SIZE..packet_size])
-    }
 }
 
 const DHT_PACKET_HEADER_SIZE: usize = 57;
@@ -65,7 +52,7 @@ impl Decoder for DhtPacketCodec {
 
     fn decode(&mut self, buf: &mut BytesMut) -> Result<Option<Self::Item>, Self::Error> {
         // deserialize EncryptedDhtPacket
-        let (consumed, encrypted_packet) = match DhtPacketBase::from_bytes(buf) {
+        let (consumed, _) = match DhtPacketBase::from_bytes(buf) {
             IResult::Incomplete(_) => {
                 return Ok(None)
             },
@@ -79,22 +66,11 @@ impl Decoder for DhtPacketCodec {
         };
 
         let mut local_stack = buf.split_to(consumed);
-
-        let decrypted_data = match encrypted_packet.payload {
-            DhtPacket::PingRequest(_) => {
-                self.decrypt_dht_payload(&mut local_stack)
-            },
-            DhtPacket::PingResponse(_) => {
-                self.decrypt_dht_payload(&mut local_stack)
-            },
-            DhtPacket::GetNodes(_) => {
-                self.decrypt_dht_payload(&mut local_stack)
-            },
-            DhtPacket::SendNodes(_) => {
-                self.decrypt_dht_payload(&mut local_stack)
-            },
-        };
-
+        let payload = local_stack.split_off(DHT_PACKET_HEADER_SIZE);
+        let decrypted_data = self.channel.decrypt(&payload[..])
+        .map_err(|_|
+            Error::new(ErrorKind::Other, "EncryptedDhtPacket decrypt failed")
+        ).unwrap();
         local_stack.extend_from_slice(&decrypted_data);
 
         // deserialize decrypted DhtPacket
@@ -128,20 +104,8 @@ impl Encoder for DhtPacketCodec {
             )?;
 
         // encrypt payload
-        let encrypted = match packet.payload {
-            DhtPacket::PingRequest(_) => {
-                self.encrypt_dht_payload(buf, &packet_buf, packet_size)
-            },
-            DhtPacket::PingResponse(_) => {
-                self.encrypt_dht_payload(buf, &packet_buf, packet_size)
-            },
-            DhtPacket::GetNodes(_) => {
-                self.encrypt_dht_payload(buf, &packet_buf, packet_size)
-            },
-            DhtPacket::SendNodes(_) => {
-                self.encrypt_dht_payload(buf, &packet_buf, packet_size)
-            },
-        };
+        buf.split_off(DHT_PACKET_HEADER_SIZE);
+        let encrypted = self.channel.encrypt(&packet_buf[DHT_PACKET_HEADER_SIZE..packet_size]);
 
         // replace payload with encrypted data
         buf.extend_from_slice(&encrypted);
@@ -161,19 +125,6 @@ impl DhtRequestCodec {
     pub fn new(channel: Channel) -> DhtRequestCodec {
         DhtRequestCodec { channel: channel }
     }
-
-    fn decrypt_dht_payload(&self, local_stack: &mut BytesMut) -> Vec<u8> {
-        let payload = local_stack.split_off(DHT_REQUEST_HEADER_SIZE);
-        self.channel.decrypt(&payload[..])
-        .map_err(|_|
-            Error::new(ErrorKind::Other, "EncryptedDhtRequest packet decrypt failed")
-        ).unwrap()
-    }
-    
-    fn encrypt_dht_payload(&self, buf: &mut BytesMut, packet_buf: &[u8], packet_size: usize) -> Vec<u8> {
-        buf.split_off(DHT_REQUEST_HEADER_SIZE);
-        self.channel.encrypt(&packet_buf[DHT_REQUEST_HEADER_SIZE..packet_size])
-    }
 }
 
 impl Decoder for DhtRequestCodec {
@@ -182,7 +133,7 @@ impl Decoder for DhtRequestCodec {
 
     fn decode(&mut self, buf: &mut BytesMut) -> Result<Option<Self::Item>, Self::Error> {
         // deserialize EncryptedDhtRequest
-        let (consumed, encrypted_packet) = match DhtRequestBase::from_bytes(buf) {
+        let (consumed, _) = match DhtRequestBase::from_bytes(buf) {
             IResult::Incomplete(_) => {
                 return Ok(None)
             },
@@ -197,14 +148,11 @@ impl Decoder for DhtRequestCodec {
 
         let mut local_stack = buf.split_to(consumed);
 
-        let decrypted_data = match encrypted_packet.payload {
-            DhtRequest::NatPingRequest(_) => {
-                self.decrypt_dht_payload(&mut local_stack)
-            },
-            DhtRequest::NatPingResponse(_) => {
-                self.decrypt_dht_payload(&mut local_stack)
-            },
-        };
+        let payload = local_stack.split_off(DHT_REQUEST_HEADER_SIZE);
+        let decrypted_data = self.channel.decrypt(&payload[..])
+        .map_err(|_|
+            Error::new(ErrorKind::Other, "EncryptedDhtRequest packet decrypt failed")
+        ).unwrap();
 
         local_stack.extend_from_slice(&decrypted_data);
 
@@ -239,14 +187,8 @@ impl Encoder for DhtRequestCodec {
             )?;
 
         // encrypt payload
-        let encrypted = match packet.payload {
-            DhtRequest::NatPingRequest(_) => {
-                self.encrypt_dht_payload(buf, &packet_buf, packet_size)
-            },
-            DhtRequest::NatPingResponse(_) => {
-                self.encrypt_dht_payload(buf, &packet_buf, packet_size)
-            },
-        };
+        buf.split_off(DHT_REQUEST_HEADER_SIZE);
+        let encrypted = self.channel.encrypt(&packet_buf[DHT_REQUEST_HEADER_SIZE..packet_size]);
 
         // replace payload with encrypted data
         buf.extend_from_slice(&encrypted);
