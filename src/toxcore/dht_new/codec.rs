@@ -43,8 +43,8 @@ impl DhtPacketCodec {
     }
 
     fn decrypt_dht_payload(&self, local_stack: &mut BytesMut) -> Vec<u8> {
-        local_stack.split_off(DHT_PACKET_HEADER_SIZE);
-        self.channel.decrypt(&local_stack[DHT_PACKET_HEADER_SIZE..])
+        let payload = local_stack.split_off(DHT_PACKET_HEADER_SIZE);
+        self.channel.decrypt(&payload[..])
         .map_err(|_|
             Error::new(ErrorKind::Other, "EncryptedDhtPacket decrypt failed")
         ).unwrap()
@@ -163,8 +163,8 @@ impl DhtRequestCodec {
     }
 
     fn decrypt_dht_payload(&self, local_stack: &mut BytesMut) -> Vec<u8> {
-        local_stack.split_off(DHT_REQUEST_HEADER_SIZE);
-        self.channel.decrypt(&local_stack[DHT_REQUEST_HEADER_SIZE..])
+        let payload = local_stack.split_off(DHT_REQUEST_HEADER_SIZE);
+        self.channel.decrypt(&payload[..])
         .map_err(|_|
             Error::new(ErrorKind::Other, "EncryptedDhtRequest packet decrypt failed")
         ).unwrap()
