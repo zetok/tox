@@ -60,12 +60,12 @@ const DHT_PACKET_HEADER_SIZE: usize = 57;
 const MAX_DHT_PACKET_SIZE: usize = 512;
 
 impl Decoder for DhtPacketCodec {
-    type Item = DhtPacket;
+    type Item = DhtPacketBase;
     type Error = Error;
 
     fn decode(&mut self, buf: &mut BytesMut) -> Result<Option<Self::Item>, Self::Error> {
         // deserialize EncryptedDhtPacket
-        let (consumed, encrypted_packet) = match DhtPacket::from_bytes(buf) {
+        let (consumed, encrypted_packet) = match DhtPacketBase::from_bytes(buf) {
             IResult::Incomplete(_) => {
                 return Ok(None)
             },
@@ -80,7 +80,7 @@ impl Decoder for DhtPacketCodec {
 
         let mut local_stack = buf.split_to(consumed);
 
-        let decrypted_data = match encrypted_packet {
+        let decrypted_data = match encrypted_packet.payload {
             DhtPacket::PingRequest(_) => {
                 self.decrypt_dht_payload(&mut local_stack)
             },
@@ -98,7 +98,7 @@ impl Decoder for DhtPacketCodec {
         local_stack.extend_from_slice(&decrypted_data);
 
         // deserialize decrypted DhtPacket
-        match DhtPacket::from_bytes(&local_stack) {
+        match DhtPacketBase::from_bytes(&local_stack) {
             IResult::Incomplete(_) => {
                 Err(Error::new(ErrorKind::Other,
                     "DhtPacket should not be incomplete"))

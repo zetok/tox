@@ -101,6 +101,21 @@ impl ToBytes for DhtPacketBase {
     }
 }
 
+impl FromBytes for DhtPacketBase {
+    named!(from_bytes<DhtPacketBase>, do_parse!(
+        packet_type : le_u8 >>
+        pk: call!(PublicKey::from_bytes) >>
+        nonce: call!(Nonce::from_bytes) >>
+        packet: switch!(value!(packet_type),
+            0 => map!(PingRequest::from_bytes, DhtPacket::PingRequest) |
+            1 => map!(PingResponse::from_bytes, DhtPacket::PingResponse) |
+            2 => map!(GetNodes::from_bytes, DhtPacket::GetNodes) |
+            4 => map!(SendNodes::from_bytes, DhtPacket::SendNodes)
+        ) >>
+        (DhtPacketBase {pk: pk, nonce: nonce, payload: packet})
+    ));
+}
+
 /** Standard DHT packet that encapsulates the payload of
 [`DhtPacketBase`](./struct.DhtPacketBase.html).
 
