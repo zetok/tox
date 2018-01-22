@@ -177,12 +177,12 @@ impl DhtRequestCodec {
 }
 
 impl Decoder for DhtRequestCodec {
-    type Item = DhtRequest;
+    type Item = DhtRequestBase;
     type Error = Error;
 
     fn decode(&mut self, buf: &mut BytesMut) -> Result<Option<Self::Item>, Self::Error> {
         // deserialize EncryptedDhtRequest
-        let (consumed, encrypted_packet) = match DhtRequest::from_bytes(buf) {
+        let (consumed, encrypted_packet) = match DhtRequestBase::from_bytes(buf) {
             IResult::Incomplete(_) => {
                 return Ok(None)
             },
@@ -197,7 +197,7 @@ impl Decoder for DhtRequestCodec {
 
         let mut local_stack = buf.split_to(consumed);
 
-        let decrypted_data = match encrypted_packet {
+        let decrypted_data = match encrypted_packet.payload {
             DhtRequest::NatPingRequest(_) => {
                 self.decrypt_dht_payload(&mut local_stack)
             },
@@ -209,7 +209,7 @@ impl Decoder for DhtRequestCodec {
         local_stack.extend_from_slice(&decrypted_data);
 
         // deserialize decrypted DhtPacket
-        match DhtRequest::from_bytes(&local_stack) {
+        match DhtRequestBase::from_bytes(&local_stack) {
             IResult::Incomplete(_) => {
                 Err(Error::new(ErrorKind::Other,
                     "DhtRequest should not be incomplete"))
@@ -226,7 +226,7 @@ impl Decoder for DhtRequestCodec {
 }
 
 impl Encoder for DhtRequestCodec {
-    type Item = DhtRequest;
+    type Item = DhtRequestBase;
     type Error = Error;
 
     fn encode(&mut self, packet: Self::Item, buf: &mut BytesMut) -> Result<(), Self::Error> {
@@ -239,7 +239,7 @@ impl Encoder for DhtRequestCodec {
             )?;
 
         // encrypt payload
-        let encrypted = match packet {
+        let encrypted = match packet.payload {
             DhtRequest::NatPingRequest(_) => {
                 self.encrypt_dht_payload(buf, &packet_buf, packet_size)
             },
