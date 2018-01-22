@@ -115,7 +115,7 @@ impl Decoder for DhtPacketCodec {
 }
 
 impl Encoder for DhtPacketCodec {
-    type Item = DhtPacket;
+    type Item = DhtPacketBase;
     type Error = Error;
 
     fn encode(&mut self, packet: Self::Item, buf: &mut BytesMut) -> Result<(), Self::Error> {
@@ -128,7 +128,7 @@ impl Encoder for DhtPacketCodec {
             )?;
 
         // encrypt payload
-        let encrypted = match packet {
+        let encrypted = match packet.payload {
             DhtPacket::PingRequest(_) => {
                 self.encrypt_dht_payload(buf, &packet_buf, packet_size)
             },

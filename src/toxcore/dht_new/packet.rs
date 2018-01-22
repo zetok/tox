@@ -53,8 +53,56 @@ use toxcore::dht_new::packed_node::PackedNode;
 /// [`PingResponse`](./struct.PingResponse.html) when serialized into bytes.
 pub const PING_SIZE: usize = 9;
 
-/** Standard DHT packet that encapsulates in the payload
-[`DhtPacketT`](./trait.DhtPacketT.html).
+/** DHT packet base struct that encapsulates in the payload
+[`DhtPacket`](./enum.DhtPacket.html).
+
+https://zetok.github.io/tox-spec/#dht-packet
+*/
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct DhtPacketBase {
+    pk: PublicKey,
+    nonce : Nonce,
+    /// payload of DhtPacket
+    pub payload: DhtPacket,
+}
+
+impl ToBytes for DhtPacketBase {
+    fn to_bytes<'a>(&self, buf: (&'a mut [u8], usize)) -> Result<(&'a mut [u8], usize), GenError> {
+        match self.payload {
+            DhtPacket::PingRequest(ref p) => 
+                do_gen!(buf,
+                    gen_be_u8!(0x00) >>
+                    gen_slice!(self.pk.as_ref()) >>
+                    gen_slice!(self.nonce.as_ref()) >>
+                    gen_call!(|buf, packet| PingRequest::to_bytes(packet, buf), p)
+                ),
+            DhtPacket::PingResponse(ref p) => 
+                do_gen!(buf,
+                    gen_be_u8!(0x01) >>
+                    gen_slice!(self.pk.as_ref()) >>
+                    gen_slice!(self.nonce.as_ref()) >>
+                    gen_call!(|buf, packet| PingResponse::to_bytes(packet, buf), p)
+                ),
+            DhtPacket::GetNodes(ref p) =>
+                do_gen!(buf,
+                    gen_be_u8!(0x02) >>
+                    gen_slice!(self.pk.as_ref()) >>
+                    gen_slice!(self.nonce.as_ref()) >>
+                    gen_call!(|buf, packet| GetNodes::to_bytes(packet, buf), p)
+                ),
+            DhtPacket::SendNodes(ref p) =>
+                do_gen!(buf,
+                    gen_be_u8!(0x04) >>
+                    gen_slice!(self.pk.as_ref()) >>
+                    gen_slice!(self.nonce.as_ref()) >>
+                    gen_call!(|buf, packet| SendNodes::to_bytes(packet, buf), p)
+                ),
+        }
+    }
+}
+
+/** Standard DHT packet that encapsulates the payload of
+[`DhtPacketBase`](./struct.DhtPacketBase.html).
 
 https://zetok.github.io/tox-spec/#dht-packet
 */
