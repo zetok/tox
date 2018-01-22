@@ -43,7 +43,29 @@ impl DhtPacketCodec {
     }
 }
 
+/*
+size    | description
+1       | packet type
+32      | public key
+24      | nonce
+--------------------
+57 bytes
+*/
 const DHT_PACKET_HEADER_SIZE: usize = 57;
+
+/*
+SendNodes
+size    | description
+1       | packet type
+32      | public key
+24      | nonce
+1       | number of response nodes
+[39,204]| packed nodes
+8       | Request Id (Ping Id)
+---------------------------------
+270 bytes maximun.
+So, 512 is enough for DhtPacket
+*/
 const MAX_DHT_PACKET_SIZE: usize = 512;
 
 impl Decoder for DhtPacketCodec {
@@ -113,7 +135,16 @@ impl Encoder for DhtPacketCodec {
     }
 }
 
-const DHT_REQUEST_HEADER_SIZE: usize = 88;
+/*
+size    | description
+1       | packet type
+32      | receiver's public key
+32      | sender's public key
+24      | nonce
+-----------------------------------
+89 bytes
+*/
+const DHT_REQUEST_HEADER_SIZE: usize = 89;
 
 /// implements tokio-io's Decoder and Encoder to deal with DHT Request Packet
 pub struct DhtRequestCodec {
