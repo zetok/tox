@@ -53,8 +53,71 @@ use toxcore::dht_new::packed_node::PackedNode;
 /// [`PingResponse`](./struct.PingResponse.html) when serialized into bytes.
 pub const PING_SIZE: usize = 9;
 
-/** Standard DHT packet that encapsulates in the payload
-[`DhtPacketT`](./trait.DhtPacketT.html).
+/** DHT packet base struct that encapsulates in the payload
+[`DhtPacket`](./enum.DhtPacket.html).
+
+https://zetok.github.io/tox-spec/#dht-packet
+*/
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct DhtPacketBase {
+    pk: PublicKey,
+    nonce : Nonce,
+    /// payload of DhtPacket
+    pub payload: DhtPacket,
+}
+
+impl ToBytes for DhtPacketBase {
+    fn to_bytes<'a>(&self, buf: (&'a mut [u8], usize)) -> Result<(&'a mut [u8], usize), GenError> {
+        match self.payload {
+            DhtPacket::PingRequest(ref p) => 
+                do_gen!(buf,
+                    gen_be_u8!(0x00) >>
+                    gen_slice!(self.pk.as_ref()) >>
+                    gen_slice!(self.nonce.as_ref()) >>
+                    gen_call!(|buf, packet| PingRequest::to_bytes(packet, buf), p)
+                ),
+            DhtPacket::PingResponse(ref p) => 
+                do_gen!(buf,
+                    gen_be_u8!(0x01) >>
+                    gen_slice!(self.pk.as_ref()) >>
+                    gen_slice!(self.nonce.as_ref()) >>
+                    gen_call!(|buf, packet| PingResponse::to_bytes(packet, buf), p)
+                ),
+            DhtPacket::GetNodes(ref p) =>
+                do_gen!(buf,
+                    gen_be_u8!(0x02) >>
+                    gen_slice!(self.pk.as_ref()) >>
+                    gen_slice!(self.nonce.as_ref()) >>
+                    gen_call!(|buf, packet| GetNodes::to_bytes(packet, buf), p)
+                ),
+            DhtPacket::SendNodes(ref p) =>
+                do_gen!(buf,
+                    gen_be_u8!(0x04) >>
+                    gen_slice!(self.pk.as_ref()) >>
+                    gen_slice!(self.nonce.as_ref()) >>
+                    gen_call!(|buf, packet| SendNodes::to_bytes(packet, buf), p)
+                ),
+        }
+    }
+}
+
+impl FromBytes for DhtPacketBase {
+    named!(from_bytes<DhtPacketBase>, do_parse!(
+        packet_type : le_u8 >>
+        pk: call!(PublicKey::from_bytes) >>
+        nonce: call!(Nonce::from_bytes) >>
+        packet: switch!(value!(packet_type),
+            0 => map!(PingRequest::from_bytes, DhtPacket::PingRequest) |
+            1 => map!(PingResponse::from_bytes, DhtPacket::PingResponse) |
+            2 => map!(GetNodes::from_bytes, DhtPacket::GetNodes) |
+            4 => map!(SendNodes::from_bytes, DhtPacket::SendNodes)
+        ) >>
+        (DhtPacketBase {pk: pk, nonce: nonce, payload: packet})
+    ));
+}
+
+/** Standard DHT packet that encapsulates the payload of
+[`DhtPacketBase`](./struct.DhtPacketBase.html).
 
 https://zetok.github.io/tox-spec/#dht-packet
 */
@@ -337,6 +400,56 @@ impl FromBytes for SendNodes {
             nodes: nodes,
             id: id,
         })
+    ));
+}
+
+/** DHT Request packet base.
+
+https://zetok.github.io/tox-spec/#dht-request-packets
+*/
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct DhtRequestBase {
+    rpk: PublicKey,
+    spk: PublicKey,
+    nonce: Nonce,
+    /// payload of DhtRequest packet
+    pub payload: DhtRequest,
+}
+
+impl ToBytes for DhtRequestBase {
+    fn to_bytes<'a>(&self, buf: (&'a mut [u8], usize)) -> Result<(&'a mut [u8], usize), GenError> {
+        match self.payload {
+            DhtRequest::NatPingRequest(ref p) => 
+                do_gen!(buf,
+                    gen_be_u8!(0x20) >>
+                    gen_slice!(self.rpk.as_ref()) >>
+                    gen_slice!(self.spk.as_ref()) >>
+                    gen_slice!(self.nonce.as_ref()) >>
+                    gen_call!(|buf, packet| NatPingRequest::to_bytes(packet, buf), p)
+                ),
+            DhtRequest::NatPingResponse(ref p) => 
+                do_gen!(buf,
+                    gen_be_u8!(0x20) >>
+                    gen_slice!(self.rpk.as_ref()) >>
+                    gen_slice!(self.spk.as_ref()) >>
+                    gen_slice!(self.nonce.as_ref()) >>
+                    gen_call!(|buf, packet| NatPingResponse::to_bytes(packet, buf), p)
+                ),
+        }
+    }
+}
+
+impl FromBytes for DhtRequestBase {
+    named!(from_bytes<DhtRequestBase>, do_parse!(
+        packet_type : le_u8 >>
+        rpk: call!(PublicKey::from_bytes) >>
+        spk: call!(PublicKey::from_bytes) >>
+        nonce: call!(Nonce::from_bytes) >>
+        packet: alt!(
+            map!(NatPingRequest::from_bytes, DhtRequest::NatPingRequest) |
+            map!(NatPingResponse::from_bytes, DhtRequest::NatPingResponse)
+        ) >>
+        (DhtRequestBase {rpk: rpk, spk: spk, nonce: nonce, payload: packet})
     ));
 }
 
