@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `State` struct in crate `sodiumoxide`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, State">
+
+    <title>sodiumoxide::crypto::hash::sha256::State - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../../../../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../../../../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../../../../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc struct">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
+        
+        <p class='location'>Struct State</p><div class="sidebar-elems"><div class="block items"><a class="sidebar-title" href="#methods">Methods</a><div class="sidebar-links"><a href="#method.new">new</a><a href="#method.update">update</a><a href="#method.finalize">finalize</a></div><a class="sidebar-title" href="#implementations">Trait Implementations</a><div class="sidebar-links"><a href="#impl-Default">Default</a></div></div><p class='location'><a href='../../../index.html'>sodiumoxide</a>::<wbr><a href='../../index.html'>crypto</a>::<wbr><a href='../index.html'>hash</a>::<wbr><a href='index.html'>sha256</a></p><script>window.sidebarCurrent = {name: 'State', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script></div>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Struct <a href='../../../index.html'>sodiumoxide</a>::<wbr><a href='../../index.html'>crypto</a>::<wbr><a href='../index.html'>hash</a>::<wbr><a href='index.html'>sha256</a>::<wbr><a class="struct" href=''>State</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../../../../src/sodiumoxide/crypto/hash/hash_macros.rs.html#34' title='goto source code'>[src]</a></span></h1>
+<pre class='rust struct'>pub struct State(_);</pre><div class='docblock'><p><code>State</code> contains the state for multi-part (streaming) hash computations. This allows the caller
+to process a message as a sequence of multiple chunks.</p>
+</div>
+                    <h2 id='methods' class='small-section-header'>
+                      Methods<a href='#methods' class='anchor'></a>
+                    </h2>
+                <h3 id='impl' class='impl'><span class='in-band'><code>impl <a class="struct" href="../../../../sodiumoxide/crypto/hash/sha256/struct.State.html" title="struct sodiumoxide::crypto::hash::sha256::State">State</a></code><a href='#impl' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../../src/sodiumoxide/crypto/hash/hash_macros.rs.html#36-63' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.new' class="method"><span id='new.v' class='invisible'><code>pub fn <a href='#method.new' class='fnname'>new</a>() -&gt; Self</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../../src/sodiumoxide/crypto/hash/hash_macros.rs.html#38-44' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p><code>new</code> constructs and initializes a new <code>State</code>.</p>
+</div><h4 id='method.update' class="method"><span id='update.v' class='invisible'><code>pub fn <a href='#method.update' class='fnname'>update</a>(&amp;mut self, data: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">]</a>)</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../../src/sodiumoxide/crypto/hash/hash_macros.rs.html#48-52' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p><code>update</code> updates the <code>State</code> with <code>data</code>. <code>update</code> can be called multiple times in order
+to compute the hash from sequential chunks of the message.</p>
+</div><h4 id='method.finalize' class="method"><span id='finalize.v' class='invisible'><code>pub fn <a href='#method.finalize' class='fnname'>finalize</a>(self) -&gt; <a class="struct" href="../../../../sodiumoxide/crypto/hash/sha256/struct.Digest.html" title="struct sodiumoxide::crypto::hash::sha256::Digest">Digest</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../../src/sodiumoxide/crypto/hash/hash_macros.rs.html#56-62' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p><code>finalize</code> finalizes the state and returns the digest value. <code>finalize</code> consumes the
+<code>State</code> so that it cannot be accidentally reused.</p>
+</div></div>
+            <h2 id='implementations' class='small-section-header'>
+              Trait Implementations<a href='#implementations' class='anchor'></a>
+            </h2>
+        <h3 id='impl-Default' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/default/trait.Default.html" title="trait core::default::Default">Default</a> for <a class="struct" href="../../../../sodiumoxide/crypto/hash/sha256/struct.State.html" title="struct sodiumoxide::crypto::hash::sha256::State">State</a></code><a href='#impl-Default' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../../src/sodiumoxide/crypto/hash/hash_macros.rs.html#65-69' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.default' class="method"><span id='default.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/default/trait.Default.html#tymethod.default' class='fnname'>default</a>() -&gt; <a class="struct" href="../../../../sodiumoxide/crypto/hash/sha256/struct.State.html" title="struct sodiumoxide::crypto::hash::sha256::State">State</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../../src/sodiumoxide/crypto/hash/hash_macros.rs.html#66-68' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Returns the &quot;default value&quot; for a type. <a href="https://doc.rust-lang.org/nightly/core/default/trait.Default.html#tymethod.default">Read more</a></p>
+</div></div></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>↑</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>↓</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>↹</dt>
+                    <dd>Switch tab</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt style="width:31px;">+ / -</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../../../../";
+        window.currentCrate = "sodiumoxide";
+    </script>
+    <script src="../../../../main.js"></script>
+    <script defer src="../../../../search-index.js"></script>
+</body>
+</html>

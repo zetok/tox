@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `TimeoutQueue` struct in crate `tox`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, TimeoutQueue">
+
+    <title>tox::toxcore::timeout::TimeoutQueue - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../../../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../../../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../../../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc struct">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
+        
+        <p class='location'>Struct TimeoutQueue</p><div class="sidebar-elems"><div class="block items"><a class="sidebar-title" href="#methods">Methods</a><div class="sidebar-links"><a href="#method.push">push</a><a href="#method.add">add</a><a href="#method.remove">remove</a><a href="#method.get_timed_out">get_timed_out</a></div><a class="sidebar-title" href="#deref-methods">Methods from Deref&lt;Target=VecDeque&lt;NodeTimeout&gt;&gt;</a><div class="sidebar-links"><a href="#method.get">get</a><a href="#method.capacity">capacity</a><a href="#method.iter">iter</a><a href="#method.as_slices">as_slices</a><a href="#method.len">len</a><a href="#method.is_empty">is_empty</a><a href="#method.contains">contains</a><a href="#method.front">front</a><a href="#method.back">back</a></div><a class="sidebar-title" href="#implementations">Trait Implementations</a><div class="sidebar-links"><a href="#impl-Clone">Clone</a><a href="#impl-Debug">Debug</a><a href="#impl-Default">Default</a><a href="#impl-Eq">Eq</a><a href="#impl-PartialEq">PartialEq</a><a href="#impl-Deref">Deref</a></div></div><p class='location'><a href='../../index.html'>tox</a>::<wbr><a href='../index.html'>toxcore</a>::<wbr><a href='index.html'>timeout</a></p><script>window.sidebarCurrent = {name: 'TimeoutQueue', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script></div>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Struct <a href='../../index.html'>tox</a>::<wbr><a href='../index.html'>toxcore</a>::<wbr><a href='index.html'>timeout</a>::<wbr><a class="struct" href=''>TimeoutQueue</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../../../src/tox/toxcore/timeout.rs.html#233-235' title='goto source code'>[src]</a></span></h1>
+<pre class='rust struct'>pub struct TimeoutQueue { /* fields omitted */ }</pre><div class='docblock'><p>Store &amp; manage timeout data.</p>
+
+<p>To create new <code>TimeoutQueue</code> use <code>Default</code> trait:</p>
+
+<pre class="rust rust-example-rendered">
+<span class="kw">use</span> <span class="ident">tox</span>::<span class="ident">toxcore</span>::<span class="ident">timeout</span>::<span class="ident">TimeoutQueue</span>;
+
+<span class="kw">let</span> <span class="ident">_timeout_queue</span> <span class="op">=</span> <span class="ident">TimeoutQueue</span>::<span class="ident">default</span>();</pre>
+</div>
+                    <h2 id='methods' class='small-section-header'>
+                      Methods<a href='#methods' class='anchor'></a>
+                    </h2>
+                <h3 id='impl' class='impl'><span class='in-band'><code>impl <a class="struct" href="../../../tox/toxcore/timeout/struct.TimeoutQueue.html" title="struct tox::toxcore::timeout::TimeoutQueue">TimeoutQueue</a></code><a href='#impl' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/tox/toxcore/timeout.rs.html#237-301' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.push' class="method"><span id='push.v' class='invisible'><code>pub fn <a href='#method.push' class='fnname'>push</a>(&amp;mut self, nt: <a class="struct" href="../../../tox/toxcore/timeout/struct.NodeTimeout.html" title="struct tox::toxcore::timeout::NodeTimeout">NodeTimeout</a>)</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/tox/toxcore/timeout.rs.html#247-249' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Push the timeout to queue.</p>
+</div><h4 id='method.add' class="method"><span id='add.v' class='invisible'><code>pub fn <a href='#method.add' class='fnname'>add</a>(&amp;mut self, pk: &amp;<a class="struct" href="../../../sodiumoxide/crypto/box_/curve25519xsalsa20poly1305/struct.PublicKey.html" title="struct sodiumoxide::crypto::box_::curve25519xsalsa20poly1305::PublicKey">PublicKey</a>, id: RequestId)</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/tox/toxcore/timeout.rs.html#254-256' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Create new timeout and add it to the queue</p>
+</div><h4 id='method.remove' class="method"><span id='remove.v' class='invisible'><code>pub fn <a href='#method.remove' class='fnname'>remove</a>(&amp;mut self, id: RequestId) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/tox/toxcore/timeout.rs.html#265-275' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Remove timeout with supplied ID and all timeouts that have same PK
+as the removed timeout.</p>
+
+<p>Returns <code>true</code> if there was at least 1 timeout that was removed,
+<code>false</code> otherwise.</p>
+</div><h4 id='method.get_timed_out' class="method"><span id='get_timed_out.v' class='invisible'><code>pub fn <a href='#method.get_timed_out' class='fnname'>get_timed_out</a>(&amp;mut self, secs: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u64.html">u64</a>) -&gt; <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html" title="struct alloc::vec::Vec">Vec</a>&lt;<a class="struct" href="../../../sodiumoxide/crypto/box_/curve25519xsalsa20poly1305/struct.PublicKey.html" title="struct sodiumoxide::crypto::box_::curve25519xsalsa20poly1305::PublicKey">PublicKey</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/tox/toxcore/timeout.rs.html#284-300' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Remove from <code>TimeoutQueue</code> and return all <code>PublicKey</code>s of nodes that
+timed out.</p>
+
+<p><strong>Note</strong>: Returns an empty <code>Vec</code> if there are no nodes that have
+timed out.</p>
+</div></div>
+                    <h2 id='deref-methods' class='small-section-header'>
+                      Methods from <a class="trait" href="https://doc.rust-lang.org/nightly/core/ops/deref/trait.Deref.html" title="trait core::ops::deref::Deref">Deref</a>&lt;Target = <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/vec_deque/struct.VecDeque.html" title="struct alloc::vec_deque::VecDeque">VecDeque</a>&lt;<a class="struct" href="../../../tox/toxcore/timeout/struct.NodeTimeout.html" title="struct tox::toxcore::timeout::NodeTimeout">NodeTimeout</a>&gt;&gt;<a href='#deref-methods' class='anchor'></a>
+                    </h2>
+                <div class='impl-items'><h4 id='method.get' class="method"><span id='get.v' class='invisible'><code>pub fn <a href='#method.get' class='fnname'>get</a>(&amp;self, index: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;</a>T&gt;</code></span><span class='out-of-band'><div class='ghost'></div><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div><a class='srclink' href='https://doc.rust-lang.org/nightly/src/alloc/vec_deque.rs.html#420-427' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Retrieves an element in the <code>VecDeque</code> by index.</p>
+
+<p>Element at index 0 is the front of the queue.</p>
+
+<h1 id='examples' class='section-header'><a href='#examples'>Examples</a></h1>
+<pre class="rust rust-example-rendered">
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">collections</span>::<span class="ident">VecDeque</span>;
+
+<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">buf</span> <span class="op">=</span> <span class="ident">VecDeque</span>::<span class="ident">new</span>();
+<span class="ident">buf</span>.<span class="ident">push_back</span>(<span class="number">3</span>);
+<span class="ident">buf</span>.<span class="ident">push_back</span>(<span class="number">4</span>);
+<span class="ident">buf</span>.<span class="ident">push_back</span>(<span class="number">5</span>);
+<span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">buf</span>.<span class="ident">get</span>(<span class="number">1</span>), <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="number">4</span>));</pre>
+</div><h4 id='method.capacity' class="method"><span id='capacity.v' class='invisible'><code>pub fn <a href='#method.capacity' class='fnname'>capacity</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a></code></span><span class='out-of-band'><div class='ghost'></div><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div><a class='srclink' href='https://doc.rust-lang.org/nightly/src/alloc/vec_deque.rs.html#506-508' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Returns the number of elements the <code>VecDeque</code> can hold without
+reallocating.</p>
+
+<h1 id='examples-1' class='section-header'><a href='#examples-1'>Examples</a></h1>
+<pre class="rust rust-example-rendered">
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">collections</span>::<span class="ident">VecDeque</span>;
+
+<span class="kw">let</span> <span class="ident">buf</span>: <span class="ident">VecDeque</span><span class="op">&lt;</span><span class="ident">i32</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">VecDeque</span>::<span class="ident">with_capacity</span>(<span class="number">10</span>);
+<span class="macro">assert</span><span class="macro">!</span>(<span class="ident">buf</span>.<span class="ident">capacity</span>() <span class="op">&gt;=</span> <span class="number">10</span>);</pre>
+</div><h4 id='method.iter' class="method"><div class="important-traits"><div class='tooltip'>ⓘ<span class='tooltiptext'>Important traits for <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/vec_deque/struct.Iter.html" title="struct alloc::vec_deque::Iter">Iter</a>&lt;'a, T&gt;</span></div><div class="content hidden"><h3 class="important">Important traits for <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/vec_deque/struct.Iter.html" title="struct alloc::vec_deque::Iter">Iter</a>&lt;'a, T&gt;</h3><code class="content"><span class="where fmt-newline">impl&lt;'a, T&gt; <a class="trait" href="https://doc.rust-lang.org/nightly/core/iter/iterator/trait.Iterator.html" title="trait core::iter::iterator::Iterator">Iterator</a> for <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/vec_deque/struct.Iter.html" title="struct alloc::vec_deque::Iter">Iter</a>&lt;'a, T&gt;</span><span class="where fmt-newline">    type <a href='https://doc.rust-lang.org/nightly/core/iter/iterator/trait.Iterator.html#associatedtype.Item' class="type">Item</a> = <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;'a </a>T;</span></code></div></div><span id='iter.v' class='invisible'><code>pub fn <a href='#method.iter' class='fnname'>iter</a>(&amp;self) -&gt; <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/vec_deque/struct.Iter.html" title="struct alloc::vec_deque::Iter">Iter</a>&lt;T&gt;</code></span><span class='out-of-band'><div class='ghost'></div><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div><a class='srclink' href='https://doc.rust-lang.org/nightly/src/alloc/vec_deque.rs.html#686-692' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Returns a front-to-back iterator.</p>
+
+<h1 id='examples-2' class='section-header'><a href='#examples-2'>Examples</a></h1>
+<pre class="rust rust-example-rendered">
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">collections</span>::<span class="ident">VecDeque</span>;
+
+<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">buf</span> <span class="op">=</span> <span class="ident">VecDeque</span>::<span class="ident">new</span>();
+<span class="ident">buf</span>.<span class="ident">push_back</span>(<span class="number">5</span>);
+<span class="ident">buf</span>.<span class="ident">push_back</span>(<span class="number">3</span>);
+<span class="ident">buf</span>.<span class="ident">push_back</span>(<span class="number">4</span>);
+<span class="kw">let</span> <span class="ident">b</span>: <span class="kw-2">&amp;</span>[_] <span class="op">=</span> <span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span><span class="number">5</span>, <span class="kw-2">&amp;</span><span class="number">3</span>, <span class="kw-2">&amp;</span><span class="number">4</span>];
+<span class="kw">let</span> <span class="ident">c</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">i32</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">buf</span>.<span class="ident">iter</span>().<span class="ident">collect</span>();
+<span class="macro">assert_eq</span><span class="macro">!</span>(<span class="kw-2">&amp;</span><span class="ident">c</span>[..], <span class="ident">b</span>);</pre>
+</div><h4 id='method.as_slices' class="method"><span id='as_slices.v' class='invisible'><code>pub fn <a href='#method.as_slices' class='fnname'>as_slices</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">(</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[T]</a>, <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[T]</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">)</a></code></span><span class='out-of-band'><div class='ghost'></div><div class='since' title='Stable since Rust version 1.5.0'>1.5.0</div><a class='srclink' href='https://doc.rust-lang.org/nightly/src/alloc/vec_deque.rs.html#743-748' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Returns a pair of slices which contain, in order, the contents of the
+<code>VecDeque</code>.</p>
+
+<h1 id='examples-3' class='section-header'><a href='#examples-3'>Examples</a></h1>
+<pre class="rust rust-example-rendered">
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">collections</span>::<span class="ident">VecDeque</span>;
+
+<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">vector</span> <span class="op">=</span> <span class="ident">VecDeque</span>::<span class="ident">new</span>();
+
+<span class="ident">vector</span>.<span class="ident">push_back</span>(<span class="number">0</span>);
+<span class="ident">vector</span>.<span class="ident">push_back</span>(<span class="number">1</span>);
+<span class="ident">vector</span>.<span class="ident">push_back</span>(<span class="number">2</span>);
+
+<span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">vector</span>.<span class="ident">as_slices</span>(), (<span class="kw-2">&amp;</span>[<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>][..], <span class="kw-2">&amp;</span>[][..]));
+
+<span class="ident">vector</span>.<span class="ident">push_front</span>(<span class="number">10</span>);
+<span class="ident">vector</span>.<span class="ident">push_front</span>(<span class="number">9</span>);
+
+<span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">vector</span>.<span class="ident">as_slices</span>(), (<span class="kw-2">&amp;</span>[<span class="number">9</span>, <span class="number">10</span>][..], <span class="kw-2">&amp;</span>[<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>][..]));</pre>
+</div><h4 id='method.len' class="method"><span id='len.v' class='invisible'><code>pub fn <a href='#method.len' class='fnname'>len</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a></code></span><span class='out-of-band'><div class='ghost'></div><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div><a class='srclink' href='https://doc.rust-lang.org/nightly/src/alloc/vec_deque.rs.html#794-796' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Returns the number of elements in the <code>VecDeque</code>.</p>
+
+<h1 id='examples-4' class='section-header'><a href='#examples-4'>Examples</a></h1>
+<pre class="rust rust-example-rendered">
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">collections</span>::<span class="ident">VecDeque</span>;
+
+<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">v</span> <span class="op">=</span> <span class="ident">VecDeque</span>::<span class="ident">new</span>();
+<span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">v</span>.<span class="ident">len</span>(), <span class="number">0</span>);
+<span class="ident">v</span>.<span class="ident">push_back</span>(<span class="number">1</span>);
+<span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">v</span>.<span class="ident">len</span>(), <span class="number">1</span>);</pre>
+</div><h4 id='method.is_empty' class="method"><span id='is_empty.v' class='invisible'><code>pub fn <a href='#method.is_empty' class='fnname'>is_empty</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code></span><span class='out-of-band'><div class='ghost'></div><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div><a class='srclink' href='https://doc.rust-lang.org/nightly/src/alloc/vec_deque.rs.html#811-813' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Returns <code>true</code> if the <code>VecDeque</code> is empty.</p>
+
+<h1 id='examples-5' class='section-header'><a href='#examples-5'>Examples</a></h1>
+<pre class="rust rust-example-rendered">
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">collections</span>::<span class="ident">VecDeque</span>;
+
+<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">v</span> <span class="op">=</span> <span class="ident">VecDeque</span>::<span class="ident">new</span>();
+<span class="macro">assert</span><span class="macro">!</span>(<span class="ident">v</span>.<span class="ident">is_empty</span>());
+<span class="ident">v</span>.<span class="ident">push_front</span>(<span class="number">1</span>);
+<span class="macro">assert</span><span class="macro">!</span>(<span class="op">!</span><span class="ident">v</span>.<span class="ident">is_empty</span>());</pre>
+</div><h4 id='method.contains' class="method"><span id='contains.v' class='invisible'><code>pub fn <a href='#method.contains' class='fnname'>contains</a>(&amp;self, x: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;</a>T) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a> <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;T: <a class="trait" href="https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html" title="trait core::cmp::PartialEq">PartialEq</a>&lt;T&gt;,&nbsp;</span></code></span><span class='out-of-band'><div class='ghost'></div><div class='since' title='Stable since Rust version 1.12.0'>1.12.0</div><a class='srclink' href='https://doc.rust-lang.org/nightly/src/alloc/vec_deque.rs.html#944-949' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Returns <code>true</code> if the <code>VecDeque</code> contains an element equal to the
+given value.</p>
+
+<h1 id='examples-6' class='section-header'><a href='#examples-6'>Examples</a></h1>
+<pre class="rust rust-example-rendered">
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">collections</span>::<span class="ident">VecDeque</span>;
+
+<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">vector</span>: <span class="ident">VecDeque</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">VecDeque</span>::<span class="ident">new</span>();
+
+<span class="ident">vector</span>.<span class="ident">push_back</span>(<span class="number">0</span>);
+<span class="ident">vector</span>.<span class="ident">push_back</span>(<span class="number">1</span>);
+
+<span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">vector</span>.<span class="ident">contains</span>(<span class="kw-2">&amp;</span><span class="number">1</span>), <span class="bool-val">true</span>);
+<span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">vector</span>.<span class="ident">contains</span>(<span class="kw-2">&amp;</span><span class="number">10</span>), <span class="bool-val">false</span>);</pre>
+</div><h4 id='method.front' class="method"><span id='front.v' class='invisible'><code>pub fn <a href='#method.front' class='fnname'>front</a>(&amp;self) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;</a>T&gt;</code></span><span class='out-of-band'><div class='ghost'></div><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div><a class='srclink' href='https://doc.rust-lang.org/nightly/src/alloc/vec_deque.rs.html#967-973' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Provides a reference to the front element, or <code>None</code> if the <code>VecDeque</code> is
+empty.</p>
+
+<h1 id='examples-7' class='section-header'><a href='#examples-7'>Examples</a></h1>
+<pre class="rust rust-example-rendered">
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">collections</span>::<span class="ident">VecDeque</span>;
+
+<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">d</span> <span class="op">=</span> <span class="ident">VecDeque</span>::<span class="ident">new</span>();
+<span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">d</span>.<span class="ident">front</span>(), <span class="prelude-val">None</span>);
+
+<span class="ident">d</span>.<span class="ident">push_back</span>(<span class="number">1</span>);
+<span class="ident">d</span>.<span class="ident">push_back</span>(<span class="number">2</span>);
+<span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">d</span>.<span class="ident">front</span>(), <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="number">1</span>));</pre>
+</div><h4 id='method.back' class="method"><span id='back.v' class='invisible'><code>pub fn <a href='#method.back' class='fnname'>back</a>(&amp;self) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;</a>T&gt;</code></span><span class='out-of-band'><div class='ghost'></div><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div><a class='srclink' href='https://doc.rust-lang.org/nightly/src/alloc/vec_deque.rs.html#1019-1025' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Provides a reference to the back element, or <code>None</code> if the <code>VecDeque</code> is
+empty.</p>
+
+<h1 id='examples-8' class='section-header'><a href='#examples-8'>Examples</a></h1>
+<pre class="rust rust-example-rendered">
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">collections</span>::<span class="ident">VecDeque</span>;
+
+<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">d</span> <span class="op">=</span> <span class="ident">VecDeque</span>::<span class="ident">new</span>();
+<span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">d</span>.<span class="ident">back</span>(), <span class="prelude-val">None</span>);
+
+<span class="ident">d</span>.<span class="ident">push_back</span>(<span class="number">1</span>);
+<span class="ident">d</span>.<span class="ident">push_back</span>(<span class="number">2</span>);
+<span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">d</span>.<span class="ident">back</span>(), <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="number">2</span>));</pre>
+</div></div><div class='impl-items'></div>
+            <h2 id='implementations' class='small-section-header'>
+              Trait Implementations<a href='#implementations' class='anchor'></a>
+            </h2>
+        <h3 id='impl-Clone' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html" title="trait core::clone::Clone">Clone</a> for <a class="struct" href="../../../tox/toxcore/timeout/struct.TimeoutQueue.html" title="struct tox::toxcore::timeout::TimeoutQueue">TimeoutQueue</a></code><a href='#impl-Clone' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/tox/toxcore/timeout.rs.html#232' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.clone' class="method"><span id='clone.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class="struct" href="../../../tox/toxcore/timeout/struct.TimeoutQueue.html" title="struct tox::toxcore::timeout::TimeoutQueue">TimeoutQueue</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/tox/toxcore/timeout.rs.html#232' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Returns a copy of the value. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone">Read more</a></p>
+</div><h4 id='method.clone_from' class="method"><span id='clone_from.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;</a>Self)</code></span><span class='out-of-band'><div class='ghost'></div><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div><a class='srclink' href='https://doc.rust-lang.org/nightly/src/core/clone.rs.html#112-114' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Performs copy-assignment from <code>source</code>. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from">Read more</a></p>
+</div></div><h3 id='impl-Debug' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a> for <a class="struct" href="../../../tox/toxcore/timeout/struct.TimeoutQueue.html" title="struct tox::toxcore::timeout::TimeoutQueue">TimeoutQueue</a></code><a href='#impl-Debug' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/tox/toxcore/timeout.rs.html#232' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.fmt' class="method"><span id='fmt.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, __arg_0: &amp;mut <a class="struct" href="https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html" title="struct core::fmt::Formatter">Formatter</a>) -&gt; <a class="type" href="https://doc.rust-lang.org/nightly/core/fmt/type.Result.html" title="type core::fmt::Result">Result</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/tox/toxcore/timeout.rs.html#232' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Formats the value using the given formatter. <a href="https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt">Read more</a></p>
+</div></div><h3 id='impl-Default' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/default/trait.Default.html" title="trait core::default::Default">Default</a> for <a class="struct" href="../../../tox/toxcore/timeout/struct.TimeoutQueue.html" title="struct tox::toxcore::timeout::TimeoutQueue">TimeoutQueue</a></code><a href='#impl-Default' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/tox/toxcore/timeout.rs.html#232' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.default' class="method"><span id='default.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/default/trait.Default.html#tymethod.default' class='fnname'>default</a>() -&gt; <a class="struct" href="../../../tox/toxcore/timeout/struct.TimeoutQueue.html" title="struct tox::toxcore::timeout::TimeoutQueue">TimeoutQueue</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/tox/toxcore/timeout.rs.html#232' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Returns the &quot;default value&quot; for a type. <a href="https://doc.rust-lang.org/nightly/core/default/trait.Default.html#tymethod.default">Read more</a></p>
+</div></div><h3 id='impl-Eq' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/cmp/trait.Eq.html" title="trait core::cmp::Eq">Eq</a> for <a class="struct" href="../../../tox/toxcore/timeout/struct.TimeoutQueue.html" title="struct tox::toxcore::timeout::TimeoutQueue">TimeoutQueue</a></code><a href='#impl-Eq' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/tox/toxcore/timeout.rs.html#232' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'></div><h3 id='impl-PartialEq' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html" title="trait core::cmp::PartialEq">PartialEq</a> for <a class="struct" href="../../../tox/toxcore/timeout/struct.TimeoutQueue.html" title="struct tox::toxcore::timeout::TimeoutQueue">TimeoutQueue</a></code><a href='#impl-PartialEq' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/tox/toxcore/timeout.rs.html#232' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.eq' class="method"><span id='eq.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#tymethod.eq' class='fnname'>eq</a>(&amp;self, __arg_0: &amp;<a class="struct" href="../../../tox/toxcore/timeout/struct.TimeoutQueue.html" title="struct tox::toxcore::timeout::TimeoutQueue">TimeoutQueue</a>) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/tox/toxcore/timeout.rs.html#232' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>This method tests for <code>self</code> and <code>other</code> values to be equal, and is used by <code>==</code>. <a href="https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#tymethod.eq">Read more</a></p>
+</div><h4 id='method.ne' class="method"><span id='ne.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#method.ne' class='fnname'>ne</a>(&amp;self, __arg_0: &amp;<a class="struct" href="../../../tox/toxcore/timeout/struct.TimeoutQueue.html" title="struct tox::toxcore::timeout::TimeoutQueue">TimeoutQueue</a>) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/tox/toxcore/timeout.rs.html#232' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>This method tests for <code>!=</code>.</p>
+</div></div><h3 id='impl-Deref' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/ops/deref/trait.Deref.html" title="trait core::ops::deref::Deref">Deref</a> for <a class="struct" href="../../../tox/toxcore/timeout/struct.TimeoutQueue.html" title="struct tox::toxcore::timeout::TimeoutQueue">TimeoutQueue</a></code><a href='#impl-Deref' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/tox/toxcore/timeout.rs.html#303-309' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='associatedtype.Target' class="type"><span id='Target.t' class='invisible'><code>type <a href='https://doc.rust-lang.org/nightly/core/ops/deref/trait.Deref.html#associatedtype.Target' class="type">Target</a> = <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/vec_deque/struct.VecDeque.html" title="struct alloc::vec_deque::VecDeque">VecDeque</a>&lt;<a class="struct" href="../../../tox/toxcore/timeout/struct.NodeTimeout.html" title="struct tox::toxcore::timeout::NodeTimeout">NodeTimeout</a>&gt;</code></span></h4>
+<div class='docblock'><p>The resulting type after dereferencing.</p>
+</div><h4 id='method.deref' class="method"><span id='deref.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/ops/deref/trait.Deref.html#tymethod.deref' class='fnname'>deref</a>(&amp;self) -&gt; &amp;Self::<a class="type" href="https://doc.rust-lang.org/nightly/core/ops/deref/trait.Deref.html#associatedtype.Target" title="type core::ops::deref::Deref::Target">Target</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/tox/toxcore/timeout.rs.html#306-308' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Dereferences the value.</p>
+</div></div></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>↑</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>↓</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>↹</dt>
+                    <dd>Switch tab</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt style="width:31px;">+ / -</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../../../";
+        window.currentCrate = "tox";
+    </script>
+    <script src="../../../main.js"></script>
+    <script defer src="../../../search-index.js"></script>
+</body>
+</html>

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `Slice` trait in crate `nom`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, Slice">
+
+    <title>nom::Slice - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc trait">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
+        
+        <p class='location'>Trait Slice</p><div class="sidebar-elems"><div class="block items"><a class="sidebar-title" href="#required-methods">Required Methods</a><div class="sidebar-links"><a href="#tymethod.slice">slice</a></div><a class="sidebar-title" href="#foreign-impls">Implementations on Foreign Types</a><div class="sidebar-links"><a href="#impl-Slice%3CRange%3Cusize%3E%3E">&amp;&#39;a str</a><a href="#impl-Slice%3CRangeTo%3Cusize%3E%3E">&amp;&#39;a str</a><a href="#impl-Slice%3CRangeFrom%3Cusize%3E%3E">&amp;&#39;a str</a><a href="#impl-Slice%3CRangeFull%3E">&amp;&#39;a str</a><a href="#impl-Slice%3CRange%3Cusize%3E%3E">&amp;&#39;a [T]</a><a href="#impl-Slice%3CRangeTo%3Cusize%3E%3E">&amp;&#39;a [T]</a><a href="#impl-Slice%3CRangeFrom%3Cusize%3E%3E">&amp;&#39;a [T]</a><a href="#impl-Slice%3CRangeFull%3E">&amp;&#39;a [T]</a></div><a class="sidebar-title" href="#implementors">Implementors</a></div><p class='location'><a href='index.html'>nom</a></p><script>window.sidebarCurrent = {name: 'Slice', ty: 'trait', relpath: ''};</script><script defer src="sidebar-items.js"></script></div>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Trait <a href='index.html'>nom</a>::<wbr><a class="trait" href=''>Slice</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../src/nom/traits.rs.html#528-531' title='goto source code'>[src]</a></span></h1>
+<pre class='rust trait'>pub trait Slice&lt;R&gt; {
+    fn <a href='#tymethod.slice' class='fnname'>slice</a>(&amp;self, range: R) -&gt; Self;
+}</pre><div class='docblock'><p>slicing operations using ranges</p>
+
+<p>this trait is loosely based on
+<code>Index</code>, but can actually return
+something else than a <code>&amp;[T]</code> or <code>&amp;str</code></p>
+</div>
+            <h2 id='required-methods' class='small-section-header'>
+              Required Methods<a href='#required-methods' class='anchor'></a>
+            </h2>
+            <div class='methods'>
+        <h3 id='tymethod.slice' class='method'><span id='slice.v' class='invisible'><code>fn <a href='#tymethod.slice' class='fnname'>slice</a>(&amp;self, range: R) -&gt; Self</code></span></h3></div>
+                <h2 id='foreign-impls' class='small-section-header'>
+                  Implementations on Foreign Types<a href='#foreign-impls' class='anchor'></a>
+                </h2>
+            <h3 id='impl-Slice%3CRange%3Cusize%3E%3E' class='impl'><span class='in-band'><code>impl&lt;'a&gt; <a class="trait" href="../nom/trait.Slice.html" title="trait nom::Slice">Slice</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/core/ops/range/struct.Range.html" title="struct core::ops::range::Range">Range</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>&gt;&gt; for &amp;'a <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a></code><a href='#impl-Slice%3CRange%3Cusize%3E%3E' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/nom/traits.rs.html#548-550' title='goto source code'>[src]</a></span></h3>
+<span class='docblock autohide'><div class='impl-items'><h4 id='method.slice' class="method"><span id='slice.v-1' class='invisible'><code>fn <a href='#method.slice' class='fnname'>slice</a>(&amp;self, range: <a class="struct" href="https://doc.rust-lang.org/nightly/core/ops/range/struct.Range.html" title="struct core::ops::range::Range">Range</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>&gt;) -&gt; Self</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/nom/traits.rs.html#535-537' title='goto source code'>[src]</a></span></h4>
+</div></span><h3 id='impl-Slice%3CRangeTo%3Cusize%3E%3E' class='impl'><span class='in-band'><code>impl&lt;'a&gt; <a class="trait" href="../nom/trait.Slice.html" title="trait nom::Slice">Slice</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/core/ops/range/struct.RangeTo.html" title="struct core::ops::range::RangeTo">RangeTo</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>&gt;&gt; for &amp;'a <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a></code><a href='#impl-Slice%3CRangeTo%3Cusize%3E%3E' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/nom/traits.rs.html#548-550' title='goto source code'>[src]</a></span></h3>
+<span class='docblock autohide'><div class='impl-items'><h4 id='method.slice-1' class="method"><span id='slice.v-2' class='invisible'><code>fn <a href='#method.slice' class='fnname'>slice</a>(&amp;self, range: <a class="struct" href="https://doc.rust-lang.org/nightly/core/ops/range/struct.RangeTo.html" title="struct core::ops::range::RangeTo">RangeTo</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>&gt;) -&gt; Self</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/nom/traits.rs.html#535-537' title='goto source code'>[src]</a></span></h4>
+</div></span><h3 id='impl-Slice%3CRangeFrom%3Cusize%3E%3E' class='impl'><span class='in-band'><code>impl&lt;'a&gt; <a class="trait" href="../nom/trait.Slice.html" title="trait nom::Slice">Slice</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/core/ops/range/struct.RangeFrom.html" title="struct core::ops::range::RangeFrom">RangeFrom</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>&gt;&gt; for &amp;'a <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a></code><a href='#impl-Slice%3CRangeFrom%3Cusize%3E%3E' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/nom/traits.rs.html#548-550' title='goto source code'>[src]</a></span></h3>
+<span class='docblock autohide'><div class='impl-items'><h4 id='method.slice-2' class="method"><span id='slice.v-3' class='invisible'><code>fn <a href='#method.slice' class='fnname'>slice</a>(&amp;self, range: <a class="struct" href="https://doc.rust-lang.org/nightly/core/ops/range/struct.RangeFrom.html" title="struct core::ops::range::RangeFrom">RangeFrom</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>&gt;) -&gt; Self</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/nom/traits.rs.html#535-537' title='goto source code'>[src]</a></span></h4>
+</div></span><h3 id='impl-Slice%3CRangeFull%3E' class='impl'><span class='in-band'><code>impl&lt;'a&gt; <a class="trait" href="../nom/trait.Slice.html" title="trait nom::Slice">Slice</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/core/ops/range/struct.RangeFull.html" title="struct core::ops::range::RangeFull">RangeFull</a>&gt; for &amp;'a <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a></code><a href='#impl-Slice%3CRangeFull%3E' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/nom/traits.rs.html#548-550' title='goto source code'>[src]</a></span></h3>
+<span class='docblock autohide'><div class='impl-items'><h4 id='method.slice-3' class="method"><span id='slice.v-4' class='invisible'><code>fn <a href='#method.slice' class='fnname'>slice</a>(&amp;self, range: <a class="struct" href="https://doc.rust-lang.org/nightly/core/ops/range/struct.RangeFull.html" title="struct core::ops::range::RangeFull">RangeFull</a>) -&gt; Self</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/nom/traits.rs.html#535-537' title='goto source code'>[src]</a></span></h4>
+</div></span><h3 id='impl-Slice%3CRange%3Cusize%3E%3E-1' class='impl'><span class='in-band'><code>impl&lt;'a, T&gt; <a class="trait" href="../nom/trait.Slice.html" title="trait nom::Slice">Slice</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/core/ops/range/struct.Range.html" title="struct core::ops::range::Range">Range</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>&gt;&gt; for <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;'a [T]</a></code><a href='#impl-Slice%3CRange%3Cusize%3E%3E-1' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/nom/traits.rs.html#543-545' title='goto source code'>[src]</a></span></h3>
+<span class='docblock autohide'><div class='impl-items'><h4 id='method.slice-4' class="method"><span id='slice.v-5' class='invisible'><code>fn <a href='#method.slice' class='fnname'>slice</a>(&amp;self, range: <a class="struct" href="https://doc.rust-lang.org/nightly/core/ops/range/struct.Range.html" title="struct core::ops::range::Range">Range</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>&gt;) -&gt; Self</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/nom/traits.rs.html#535-537' title='goto source code'>[src]</a></span></h4>
+</div></span><h3 id='impl-Slice%3CRangeTo%3Cusize%3E%3E-1' class='impl'><span class='in-band'><code>impl&lt;'a, T&gt; <a class="trait" href="../nom/trait.Slice.html" title="trait nom::Slice">Slice</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/core/ops/range/struct.RangeTo.html" title="struct core::ops::range::RangeTo">RangeTo</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>&gt;&gt; for <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;'a [T]</a></code><a href='#impl-Slice%3CRangeTo%3Cusize%3E%3E-1' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/nom/traits.rs.html#543-545' title='goto source code'>[src]</a></span></h3>
+<span class='docblock autohide'><div class='impl-items'><h4 id='method.slice-5' class="method"><span id='slice.v-6' class='invisible'><code>fn <a href='#method.slice' class='fnname'>slice</a>(&amp;self, range: <a class="struct" href="https://doc.rust-lang.org/nightly/core/ops/range/struct.RangeTo.html" title="struct core::ops::range::RangeTo">RangeTo</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>&gt;) -&gt; Self</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/nom/traits.rs.html#535-537' title='goto source code'>[src]</a></span></h4>
+</div></span><h3 id='impl-Slice%3CRangeFrom%3Cusize%3E%3E-1' class='impl'><span class='in-band'><code>impl&lt;'a, T&gt; <a class="trait" href="../nom/trait.Slice.html" title="trait nom::Slice">Slice</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/core/ops/range/struct.RangeFrom.html" title="struct core::ops::range::RangeFrom">RangeFrom</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>&gt;&gt; for <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;'a [T]</a></code><a href='#impl-Slice%3CRangeFrom%3Cusize%3E%3E-1' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/nom/traits.rs.html#543-545' title='goto source code'>[src]</a></span></h3>
+<span class='docblock autohide'><div class='impl-items'><h4 id='method.slice-6' class="method"><span id='slice.v-7' class='invisible'><code>fn <a href='#method.slice' class='fnname'>slice</a>(&amp;self, range: <a class="struct" href="https://doc.rust-lang.org/nightly/core/ops/range/struct.RangeFrom.html" title="struct core::ops::range::RangeFrom">RangeFrom</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>&gt;) -&gt; Self</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/nom/traits.rs.html#535-537' title='goto source code'>[src]</a></span></h4>
+</div></span><h3 id='impl-Slice%3CRangeFull%3E-1' class='impl'><span class='in-band'><code>impl&lt;'a, T&gt; <a class="trait" href="../nom/trait.Slice.html" title="trait nom::Slice">Slice</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/core/ops/range/struct.RangeFull.html" title="struct core::ops::range::RangeFull">RangeFull</a>&gt; for <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;'a [T]</a></code><a href='#impl-Slice%3CRangeFull%3E-1' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/nom/traits.rs.html#543-545' title='goto source code'>[src]</a></span></h3>
+<span class='docblock autohide'><div class='impl-items'><h4 id='method.slice-7' class="method"><span id='slice.v-8' class='invisible'><code>fn <a href='#method.slice' class='fnname'>slice</a>(&amp;self, range: <a class="struct" href="https://doc.rust-lang.org/nightly/core/ops/range/struct.RangeFull.html" title="struct core::ops::range::RangeFull">RangeFull</a>) -&gt; Self</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/nom/traits.rs.html#535-537' title='goto source code'>[src]</a></span></h4>
+</div></span>
+        <h2 id='implementors' class='small-section-header'>
+          Implementors<a href='#implementors' class='anchor'></a>
+        </h2>
+        <ul class='item-list' id='implementors-list'>
+    </ul><script type="text/javascript" async
+                         src="../implementors/nom/trait.Slice.js">
+                 </script></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>↑</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>↓</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>↹</dt>
+                    <dd>Switch tab</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt style="width:31px;">+ / -</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../";
+        window.currentCrate = "nom";
+    </script>
+    <script src="../main.js"></script>
+    <script defer src="../search-index.js"></script>
+</body>
+</html>

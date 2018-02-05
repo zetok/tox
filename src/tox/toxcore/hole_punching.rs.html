@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="Source to the Rust file `src/toxcore/hole_punching.rs`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang">
+
+    <title>hole_punching.rs.html -- source</title>
+
+    <link rel="stylesheet" type="text/css" href="../../../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../../../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../../../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc source">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
+        
+        
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content"><pre class="line-numbers"><span id="1"> 1</span>
+<span id="2"> 2</span>
+<span id="3"> 3</span>
+<span id="4"> 4</span>
+<span id="5"> 5</span>
+<span id="6"> 6</span>
+<span id="7"> 7</span>
+<span id="8"> 8</span>
+<span id="9"> 9</span>
+<span id="10">10</span>
+<span id="11">11</span>
+<span id="12">12</span>
+<span id="13">13</span>
+<span id="14">14</span>
+<span id="15">15</span>
+<span id="16">16</span>
+<span id="17">17</span>
+<span id="18">18</span>
+<span id="19">19</span>
+<span id="20">20</span>
+<span id="21">21</span>
+<span id="22">22</span>
+<span id="23">23</span>
+<span id="24">24</span>
+<span id="25">25</span>
+<span id="26">26</span>
+<span id="27">27</span>
+<span id="28">28</span>
+<span id="29">29</span>
+<span id="30">30</span>
+<span id="31">31</span>
+<span id="32">32</span>
+<span id="33">33</span>
+<span id="34">34</span>
+<span id="35">35</span>
+<span id="36">36</span>
+<span id="37">37</span>
+<span id="38">38</span>
+<span id="39">39</span>
+<span id="40">40</span>
+<span id="41">41</span>
+<span id="42">42</span>
+<span id="43">43</span>
+<span id="44">44</span>
+<span id="45">45</span>
+<span id="46">46</span>
+<span id="47">47</span>
+<span id="48">48</span>
+<span id="49">49</span>
+<span id="50">50</span>
+<span id="51">51</span>
+<span id="52">52</span>
+<span id="53">53</span>
+</pre><pre class="rust ">
+<span class="comment">/*
+    Copyright © 2016 Zetok Zalbavar &lt;zexavexxe@gmail.com&gt;
+
+    This file is part of Tox.
+
+    Tox is libre software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Tox is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Tox.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+*/</span>
+
+
+<span class="doccomment">/*!
+Module for hole-punching. Build on top of DHT.
+
+https://zetok.github.io/tox-spec/#hole-punching
+*/</span>
+
+
+<span class="doccomment">/// Types of NATs.</span>
+<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">NatKind</span> {
+    <span class="doccomment">/// Cone NAT. Eeasiest to deal with, since friend will just respond to</span>
+    <span class="doccomment">/// [DHT `Ping` request](../dht/struct.Ping.html). Close to use nodes will</span>
+    <span class="doccomment">/// return same `IP:port` of friend.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// https://zetok.github.io/tox-spec/#cone-nat</span>
+    <span class="ident">ConeNat</span>,
+
+    <span class="doccomment">/// Doesn&#39;t respond to DHT Ping request. Close to us peers will return to us</span>
+    <span class="doccomment">/// same `IP:port` of friend.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// https://zetok.github.io/tox-spec/#restricted-cone-nat</span>
+    <span class="ident">ResConeNat</span>,
+
+    <span class="doccomment">/// Doesn&#39;t respond to DHT Ping request. Close to us peers will return to us</span>
+    <span class="doccomment">/// same `IP`, but differnt `port` of friend.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// https://zetok.github.io/tox-spec/#symmetric-nat</span>
+    <span class="ident">SymNat</span>,
+
+    <span class="doccomment">/// This kind of NAT either can&#39;t be hole-punched, or close to us nodes</span>
+    <span class="doccomment">/// just provide us with an outdated info. Use most-common `IP:port` for</span>
+    <span class="doccomment">/// hole-punching, hoping that it&#39;s just an outdated info.</span>
+    <span class="ident">Other</span>,
+}
+</pre>
+</section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>↑</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>↓</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>↹</dt>
+                    <dd>Switch tab</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt style="width:31px;">+ / -</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../../../";
+        window.currentCrate = "tox";
+    </script>
+    <script src="../../../main.js"></script>
+    <script defer src="../../../search-index.js"></script>
+</body>
+</html>

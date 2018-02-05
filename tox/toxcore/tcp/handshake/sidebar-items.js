@@ -1,0 +1,1 @@
+initSidebarItems({"mod":[["codec","Codecs to deal with ClientHandshake and ServerHandshake in terms of tokio-io"],["packet","Handshake packets to establish a confirmed connection via handshake using `diagram`"]]});

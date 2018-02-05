@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["GenError","Base type for generator errors"],["IResult","Holds the result of parsing functions"]],"trait":[["FromBytes","The trait provides method to deserialize struct from raw bytes"],["ToBytes","The trait provides method to serialize struct into raw bytes"]]});

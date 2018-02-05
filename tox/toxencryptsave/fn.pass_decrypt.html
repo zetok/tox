@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `pass_decrypt` fn in crate `tox`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, pass_decrypt">
+
+    <title>tox::toxencryptsave::pass_decrypt - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc fn">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
+        
+        <p class='location'><a href='../index.html'>tox</a>::<wbr><a href='index.html'>toxencryptsave</a></p><script>window.sidebarCurrent = {name: 'pass_decrypt', ty: 'fn', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Function <a href='../index.html'>tox</a>::<wbr><a href='index.html'>toxencryptsave</a>::<wbr><a class="fn" href=''>pass_decrypt</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../../src/tox/toxencryptsave/mod.rs.html#351-358' title='goto source code'>[src]</a></span></h1>
+<pre class='rust fn'>pub fn pass_decrypt(<br>&nbsp;&nbsp;&nbsp;&nbsp;data: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">]</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;passphrase: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">]</a><br>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html" title="struct alloc::vec::Vec">Vec</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a>&gt;, <a class="enum" href="../../tox/toxencryptsave/enum.DecryptionError.html" title="enum tox::toxencryptsave::DecryptionError">DecryptionError</a>&gt;</pre><div class='docblock'><p>Try to decrypt given <strong>TES</strong> data with provided passphrase.</p>
+
+<p><strong>Note that <code>passphrase</code> memory is not being zeroed after it has been
+used</strong>. Code that provides <code>passphrase</code> should take care of zeroing that
+memory.</p>
+
+<p>Decrypted data is smaller by <a href="./constant.EXTRA_LENGTH.html"><code>EXTRA_LENGTH</code></a>
+than encrypted data.</p>
+
+<h2 id='fails-when' class='section-header'><a href='#fails-when'>Fails when:</a></h2>
+<ul>
+<li>provided <code>data</code> is empty</li>
+<li>size of provided <code>data</code> is less than <code>EXTRA_LENGTH</code></li>
+<li>format of provided <code>data</code> is wrong</li>
+<li>decrypting <code>data</code> fails
+
+<ul>
+<li>could be due to OOM or by providing bytes that aren&#39;t encrypted after
+encrypted part</li>
+</ul></li>
+<li><code>passphrase</code> is empty</li>
+</ul>
+
+<pre class="rust rust-example-rendered">
+<span class="kw">use</span> <span class="self">self</span>::<span class="ident">tox</span>::<span class="ident">toxencryptsave</span>::<span class="kw-2">*</span>;
+
+<span class="comment">// with an empty data</span>
+<span class="macro">assert_eq</span><span class="macro">!</span>(<span class="prelude-val">Err</span>(<span class="ident">DecryptionError</span>::<span class="ident">Null</span>), <span class="ident">pass_decrypt</span>(<span class="kw-2">&amp;</span>[], <span class="kw-2">&amp;</span>[<span class="number">0</span>]));
+
+<span class="comment">// when there&#39;s not enough data to decrypt</span>
+<span class="macro">assert_eq</span><span class="macro">!</span>(<span class="prelude-val">Err</span>(<span class="ident">DecryptionError</span>::<span class="ident">InvalidLength</span>), <span class="ident">pass_decrypt</span>(<span class="ident">MAGIC_NUMBER</span>, <span class="kw-2">&amp;</span>[<span class="number">0</span>]));
+
+<span class="kw">let</span> <span class="ident">encrypted</span> <span class="op">=</span> <span class="ident">pass_encrypt</span>(<span class="kw-2">&amp;</span>[<span class="number">0</span>, <span class="number">0</span>], <span class="kw-2">&amp;</span>[<span class="number">0</span>]).<span class="ident">expect</span>(<span class="string">&quot;Failed to pass_encrypt!&quot;</span>);
+
+<span class="comment">// when passphrase is empty</span>
+<span class="macro">assert_eq</span><span class="macro">!</span>(<span class="prelude-val">Err</span>(<span class="ident">DecryptionError</span>::<span class="ident">KeyDerivation</span>(<span class="ident">KeyDerivationError</span>::<span class="ident">Null</span>)),
+           <span class="ident">pass_decrypt</span>(<span class="kw-2">&amp;</span><span class="ident">encrypted</span>, <span class="kw-2">&amp;</span>[]));
+
+<span class="comment">// when data format is wrong</span>
+<span class="kw">for</span> <span class="ident">pos</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">MAGIC_LENGTH</span> {
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">enc</span> <span class="op">=</span> <span class="ident">encrypted</span>.<span class="ident">clone</span>();
+    <span class="kw">if</span> <span class="ident">enc</span>[<span class="ident">pos</span>] <span class="op">==</span> <span class="number">0</span> { <span class="ident">enc</span>[<span class="ident">pos</span>] <span class="op">=</span> <span class="number">1</span>; } <span class="kw">else</span> { <span class="ident">enc</span>[<span class="ident">pos</span>] <span class="op">=</span> <span class="number">0</span>; }
+    <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="prelude-val">Err</span>(<span class="ident">DecryptionError</span>::<span class="ident">BadFormat</span>), <span class="ident">pass_decrypt</span>(<span class="kw-2">&amp;</span><span class="ident">enc</span>, <span class="kw-2">&amp;</span>[<span class="number">0</span>]));
+}
+
+{ <span class="comment">// there are more or less bytes than the encrypted ones</span>
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">enc</span> <span class="op">=</span> <span class="ident">encrypted</span>.<span class="ident">clone</span>();
+    <span class="ident">enc</span>.<span class="ident">push</span>(<span class="number">0</span>);
+    <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="prelude-val">Err</span>(<span class="ident">DecryptionError</span>::<span class="ident">Failed</span>), <span class="ident">pass_decrypt</span>(<span class="kw-2">&amp;</span><span class="ident">enc</span>, <span class="kw-2">&amp;</span>[<span class="number">0</span>]));
+
+    <span class="comment">// less</span>
+    <span class="ident">enc</span>.<span class="ident">pop</span>();
+    <span class="ident">enc</span>.<span class="ident">pop</span>();
+    <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="prelude-val">Err</span>(<span class="ident">DecryptionError</span>::<span class="ident">Failed</span>), <span class="ident">pass_decrypt</span>(<span class="kw-2">&amp;</span><span class="ident">enc</span>, <span class="kw-2">&amp;</span>[<span class="number">0</span>]));
+}</pre>
+</div></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>↑</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>↓</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>↹</dt>
+                    <dd>Switch tab</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt style="width:31px;">+ / -</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../../";
+        window.currentCrate = "tox";
+    </script>
+    <script src="../../main.js"></script>
+    <script defer src="../../search-index.js"></script>
+</body>
+</html>

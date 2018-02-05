@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `timeout` mod in crate `tox`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, timeout">
+
+    <title>tox::toxcore::timeout - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../../../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../../../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../../../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc mod">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
+        
+        <p class='location'>Module timeout</p><div class="sidebar-elems"><div class="block items"><ul><li><a href="#structs">Structs</a></li><li><a href="#enums">Enums</a></li><li><a href="#constants">Constants</a></li></ul></div><p class='location'><a href='../../index.html'>tox</a>::<wbr><a href='../index.html'>toxcore</a></p><script>window.sidebarCurrent = {name: 'timeout', ty: 'mod', relpath: '../'};</script><script defer src="../sidebar-items.js"></script></div>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Module <a href='../../index.html'>tox</a>::<wbr><a href='../index.html'>toxcore</a>::<wbr><a class="mod" href=''>timeout</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../../../src/tox/toxcore/timeout.rs.html#21-497' title='goto source code'>[src]</a></span></h1>
+<div class='docblock'><p>Managing requests IDs and timeouts.</p>
+
+<p>Peers are to be timed out when they do not show any activity before
+running into a timeout.</p>
+
+<h1 id='timeout-data-to-store' class='section-header'><a href='#timeout-data-to-store'>Timeout data to store:</a></h1>
+<ul>
+<li>Instant (when was the last interaction with given peer)</li>
+<li>request ID (from PingReq, GetNodes, ..other?)</li>
+<li>PK (unique identifier of a peer)
+
+<ul>
+<li>does it really need to be stored? can&#39;t it be a reference to PK
+stored somewhere else? it&#39;s &quot;just&quot; 32 bytes, but still</li>
+<li>can it be replaced by futures?</li>
+</ul></li>
+</ul>
+
+<p>By what storage needs to be accessed:</p>
+
+<ul>
+<li>timeout, based on Instant::elapsed() &lt; Duration::from_secs(TIMEOUT);
+
+<ul>
+<li>sorting according to increasing timeout?</li>
+<li>multiple storages according to what the timeout is for?</li>
+</ul></li>
+<li>Request ID: remove NodeTimeout from the queue if IDs match and spawn
+TimeoutFuture</li>
+</ul>
+
+<h1 id='how-it-is-supposed-to-work' class='section-header'><a href='#how-it-is-supposed-to-work'>How it is supposed to work</a></h1>
+<h2 id='storage-for-timeouts' class='section-header'><a href='#storage-for-timeouts'>Storage for timeouts</a></h2>
+<ul>
+<li>store <a href="./struct.NodeTimeout.html"><code>NodeTimeout</code></a> in <code>VecDeque</code>
+
+<ul>
+<li>separate queues for each <a href="../packet_kind/enum.PacketKind.html"><code>PacketKind</code></a> request</li>
+</ul></li>
+<li>append new timeouts at the end of the queue</li>
+<li><code>front()</code> to check if first timeout is to be triggered
+
+<ul>
+<li><code>pop_front()</code> to remove timeout from queue if it&#39;s past it</li>
+</ul></li>
+</ul>
+
+<h3 id='dependant-behaviour' class='section-header'><a href='#dependant-behaviour'>Dependant behaviour</a></h3>
+<ul>
+<li>Once it&#39;s past the <a href="./struct.NodeTimeout.html"><code>NodeTimeout</code></a>, remove it from both queue and:
+
+<ul>
+<li>initial implementation: from <code>Kbucket</code></li>
+<li>better implementation: modify <a href="./enum.NodeState.html"><code>NodeState</code></a> in table of <code>NodeInfo</code>s,
+and act accordingly to the <a href="./enum.NodeState.html"><code>NodeState</code></a></li>
+</ul></li>
+</ul>
+
+<h2 id='timeout-future' class='section-header'><a href='#timeout-future'>Timeout future</a></h2>
+<p>Possibly create a new <code>TimoutFuture</code> for each known node – future is
+created to trigger <a href="../dht/struct.GetNodes.html"><code>GetNodes</code></a> requests.</p>
+</div><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.NodeTimeout.html"
+                                  title='struct tox::toxcore::timeout::NodeTimeout'>NodeTimeout</a></td>
+                           <td class='docblock-short'>
+                                <p>A DHT node&#39;s associated timeout info.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.TimeoutQueue.html"
+                                  title='struct tox::toxcore::timeout::TimeoutQueue'>TimeoutQueue</a></td>
+                           <td class='docblock-short'>
+                                <p>Store &amp; manage timeout data.</p>
+                           </td>
+                       </tr></table><h2 id='enums' class='section-header'><a href="#enums">Enums</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class="enum" href="enum.NodeState.html"
+                                  title='enum tox::toxcore::timeout::NodeState'>NodeState</a></td>
+                           <td class='docblock-short'>
+                                <p>Enum stating whether we consider responsiveness of given DHT node
+as <code>Good</code>, <code>Bad</code> or <code>Unresponsive</code>.</p>
+                           </td>
+                       </tr></table><h2 id='constants' class='section-header'><a href="#constants">Constants</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.BAD_TIME.html"
+                                  title='constant tox::toxcore::timeout::BAD_TIME'>BAD_TIME</a></td>
+                           <td class='docblock-short'>
+                                <p>Number of seconds after which DHT node is considered to be <code>Bad</code>. See
+<a href="./enum.NodeState.html"><code>NodeState</code></a>.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.PING_TIMEOUT.html"
+                                  title='constant tox::toxcore::timeout::PING_TIMEOUT'>PING_TIMEOUT</a></td>
+                           <td class='docblock-short'>
+                                <p>Number of seconds to reach ping timeout. DHT node has to respond to a
+<a href="../dht/struct.PingReq.html"><code>PingReq</code></a> in less than <code>PING_TIMEOUT</code> seconds.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.RESPONSE_CHECK.html"
+                                  title='constant tox::toxcore::timeout::RESPONSE_CHECK'>RESPONSE_CHECK</a></td>
+                           <td class='docblock-short'>
+                                <p>Number of seconds between each time that a DHT node needs to be checked
+for responsiveness by sending to it a <a href="../dht/struct.GetNodes.html"><code>GetNodes</code></a> request.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.UNRESPONSIVE_TIME.html"
+                                  title='constant tox::toxcore::timeout::UNRESPONSIVE_TIME'>UNRESPONSIVE_TIME</a></td>
+                           <td class='docblock-short'>
+                                <p>Number of seconds after which DHT node is considered to be <code>Unresponsive</code>.
+See <a href="./enum.NodeState.html"><code>NodeState</code></a>.</p>
+                           </td>
+                       </tr></table></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>↑</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>↓</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>↹</dt>
+                    <dd>Switch tab</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt style="width:31px;">+ / -</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../../../";
+        window.currentCrate = "tox";
+    </script>
+    <script src="../../../main.js"></script>
+    <script defer src="../../../search-index.js"></script>
+</body>
+</html>

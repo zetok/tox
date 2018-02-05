@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `FindToken` trait in crate `nom`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, FindToken">
+
+    <title>nom::FindToken - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc trait">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
+        
+        <p class='location'>Trait FindToken</p><div class="sidebar-elems"><div class="block items"><a class="sidebar-title" href="#required-methods">Required Methods</a><div class="sidebar-links"><a href="#tymethod.find_token">find_token</a></div><a class="sidebar-title" href="#foreign-impls">Implementations on Foreign Types</a><div class="sidebar-links"><a href="#impl-FindToken%3C%26%27a%20%5Bu8%5D%3E">u8</a><a href="#impl-FindToken%3C%26%27a%20str%3E">u8</a><a href="#impl-FindToken%3C%26%27a%20%5Bu8%5D%3E">&amp;&#39;b u8</a><a href="#impl-FindToken%3C%26%27a%20str%3E">&amp;&#39;b u8</a><a href="#impl-FindToken%3C%26%27a%20str%3E">char</a></div><a class="sidebar-title" href="#implementors">Implementors</a></div><p class='location'><a href='index.html'>nom</a></p><script>window.sidebarCurrent = {name: 'FindToken', ty: 'trait', relpath: ''};</script><script defer src="sidebar-items.js"></script></div>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Trait <a href='index.html'>nom</a>::<wbr><a class="trait" href=''>FindToken</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../src/nom/traits.rs.html#418-420' title='goto source code'>[src]</a></span></h1>
+<pre class='rust trait'>pub trait FindToken&lt;T&gt; {
+    fn <a href='#tymethod.find_token' class='fnname'>find_token</a>(&amp;self, input: T) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>;
+}</pre><div class='docblock'><p>look for self in the given input stream</p>
+</div>
+            <h2 id='required-methods' class='small-section-header'>
+              Required Methods<a href='#required-methods' class='anchor'></a>
+            </h2>
+            <div class='methods'>
+        <h3 id='tymethod.find_token' class='method'><span id='find_token.v' class='invisible'><code>fn <a href='#tymethod.find_token' class='fnname'>find_token</a>(&amp;self, input: T) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code></span></h3></div>
+                <h2 id='foreign-impls' class='small-section-header'>
+                  Implementations on Foreign Types<a href='#foreign-impls' class='anchor'></a>
+                </h2>
+            <h3 id='impl-FindToken%3C%26%27a%20%5Bu8%5D%3E' class='impl'><span class='in-band'><code>impl&lt;'a&gt; <a class="trait" href="../nom/trait.FindToken.html" title="trait nom::FindToken">FindToken</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;'a [</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">]</a>&gt; for <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a></code><a href='#impl-FindToken%3C%26%27a%20%5Bu8%5D%3E' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/nom/traits.rs.html#422-426' title='goto source code'>[src]</a></span></h3>
+<span class='docblock autohide'><div class='impl-items'><h4 id='method.find_token' class="method"><span id='find_token.v-1' class='invisible'><code>fn <a href='#method.find_token' class='fnname'>find_token</a>(&amp;self, input: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">]</a>) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/nom/traits.rs.html#423-425' title='goto source code'>[src]</a></span></h4>
+</div></span><h3 id='impl-FindToken%3C%26%27a%20str%3E' class='impl'><span class='in-band'><code>impl&lt;'a&gt; <a class="trait" href="../nom/trait.FindToken.html" title="trait nom::FindToken">FindToken</a>&lt;&amp;'a <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>&gt; for <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a></code><a href='#impl-FindToken%3C%26%27a%20str%3E' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/nom/traits.rs.html#428-432' title='goto source code'>[src]</a></span></h3>
+<span class='docblock autohide'><div class='impl-items'><h4 id='method.find_token-1' class="method"><span id='find_token.v-2' class='invisible'><code>fn <a href='#method.find_token' class='fnname'>find_token</a>(&amp;self, input: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/nom/traits.rs.html#429-431' title='goto source code'>[src]</a></span></h4>
+</div></span><h3 id='impl-FindToken%3C%26%27a%20%5Bu8%5D%3E-1' class='impl'><span class='in-band'><code>impl&lt;'a, 'b&gt; <a class="trait" href="../nom/trait.FindToken.html" title="trait nom::FindToken">FindToken</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;'a [</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">]</a>&gt; for &amp;'b <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a></code><a href='#impl-FindToken%3C%26%27a%20%5Bu8%5D%3E-1' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/nom/traits.rs.html#434-438' title='goto source code'>[src]</a></span></h3>
+<span class='docblock autohide'><div class='impl-items'><h4 id='method.find_token-2' class="method"><span id='find_token.v-3' class='invisible'><code>fn <a href='#method.find_token' class='fnname'>find_token</a>(&amp;self, input: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">]</a>) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/nom/traits.rs.html#435-437' title='goto source code'>[src]</a></span></h4>
+</div></span><h3 id='impl-FindToken%3C%26%27a%20str%3E-1' class='impl'><span class='in-band'><code>impl&lt;'a, 'b&gt; <a class="trait" href="../nom/trait.FindToken.html" title="trait nom::FindToken">FindToken</a>&lt;&amp;'a <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>&gt; for &amp;'b <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a></code><a href='#impl-FindToken%3C%26%27a%20str%3E-1' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/nom/traits.rs.html#440-444' title='goto source code'>[src]</a></span></h3>
+<span class='docblock autohide'><div class='impl-items'><h4 id='method.find_token-3' class="method"><span id='find_token.v-4' class='invisible'><code>fn <a href='#method.find_token' class='fnname'>find_token</a>(&amp;self, input: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/nom/traits.rs.html#441-443' title='goto source code'>[src]</a></span></h4>
+</div></span><h3 id='impl-FindToken%3C%26%27a%20str%3E-2' class='impl'><span class='in-band'><code>impl&lt;'a&gt; <a class="trait" href="../nom/trait.FindToken.html" title="trait nom::FindToken">FindToken</a>&lt;&amp;'a <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>&gt; for <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.char.html">char</a></code><a href='#impl-FindToken%3C%26%27a%20str%3E-2' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/nom/traits.rs.html#446-453' title='goto source code'>[src]</a></span></h3>
+<span class='docblock autohide'><div class='impl-items'><h4 id='method.find_token-4' class="method"><span id='find_token.v-5' class='invisible'><code>fn <a href='#method.find_token' class='fnname'>find_token</a>(&amp;self, input: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/nom/traits.rs.html#447-452' title='goto source code'>[src]</a></span></h4>
+</div></span>
+        <h2 id='implementors' class='small-section-header'>
+          Implementors<a href='#implementors' class='anchor'></a>
+        </h2>
+        <ul class='item-list' id='implementors-list'>
+    </ul><script type="text/javascript" async
+                         src="../implementors/nom/trait.FindToken.js">
+                 </script></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>↑</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>↓</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>↹</dt>
+                    <dd>Switch tab</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt style="width:31px;">+ / -</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../";
+        window.currentCrate = "nom";
+    </script>
+    <script src="../main.js"></script>
+    <script defer src="../search-index.js"></script>
+</body>
+</html>

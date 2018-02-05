@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["Codec","implements tokio-io's Decoder and Encoder to deal with Packet"]]});

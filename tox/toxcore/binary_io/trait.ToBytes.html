@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `ToBytes` trait in crate `tox`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, ToBytes">
+
+    <title>tox::toxcore::binary_io::ToBytes - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../../../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../../../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../../../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc trait">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
+        
+        <p class='location'>Trait ToBytes</p><div class="sidebar-elems"><div class="block items"><a class="sidebar-title" href="#required-methods">Required Methods</a><div class="sidebar-links"><a href="#tymethod.to_bytes">to_bytes</a></div><a class="sidebar-title" href="#foreign-impls">Implementations on Foreign Types</a><div class="sidebar-links"><a href="#impl-ToBytes">IpAddr</a></div><a class="sidebar-title" href="#implementors">Implementors</a></div><p class='location'><a href='../../index.html'>tox</a>::<wbr><a href='../index.html'>toxcore</a>::<wbr><a href='index.html'>binary_io</a></p><script>window.sidebarCurrent = {name: 'ToBytes', ty: 'trait', relpath: ''};</script><script defer src="sidebar-items.js"></script></div>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Trait <a href='../../index.html'>tox</a>::<wbr><a href='../index.html'>toxcore</a>::<wbr><a href='index.html'>binary_io</a>::<wbr><a class="trait" href=''>ToBytes</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../../../src/tox/toxcore/binary_io.rs.html#28-31' title='goto source code'>[src]</a></span></h1>
+<pre class='rust trait'>pub trait ToBytes {
+    fn <a href='#tymethod.to_bytes' class='fnname'>to_bytes</a>(&amp;self) -&gt; <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html" title="struct alloc::vec::Vec">Vec</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a>&gt;;
+}</pre><div class='docblock'><p>Serialization into bytes.</p>
+</div>
+            <h2 id='required-methods' class='small-section-header'>
+              Required Methods<a href='#required-methods' class='anchor'></a>
+            </h2>
+            <div class='methods'>
+        <h3 id='tymethod.to_bytes' class='method'><span id='to_bytes.v' class='invisible'><code>fn <a href='#tymethod.to_bytes' class='fnname'>to_bytes</a>(&amp;self) -&gt; <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html" title="struct alloc::vec::Vec">Vec</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a>&gt;</code></span></h3><div class='docblock'><p>Serialize into bytes.</p>
+</div></div>
+                <h2 id='foreign-impls' class='small-section-header'>
+                  Implementations on Foreign Types<a href='#foreign-impls' class='anchor'></a>
+                </h2>
+            <h3 id='impl-ToBytes' class='impl'><span class='in-band'><code>impl <a class="trait" href="../../../tox/toxcore/binary_io/trait.ToBytes.html" title="trait tox::toxcore::binary_io::ToBytes">ToBytes</a> for <a class="enum" href="https://doc.rust-lang.org/nightly/std/net/ip/enum.IpAddr.html" title="enum std::net::ip::IpAddr">IpAddr</a></code><a href='#impl-ToBytes' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/tox/toxcore/dht.rs.html#205-221' title='goto source code'>[src]</a></span></h3>
+<span class='docblock autohide'><div class='impl-items'><h4 id='method.to_bytes' class="method"><span id='to_bytes.v-1' class='invisible'><code>fn <a href='#method.to_bytes' class='fnname'>to_bytes</a>(&amp;self) -&gt; <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html" title="struct alloc::vec::Vec">Vec</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/tox/toxcore/dht.rs.html#206-220' title='goto source code'>[src]</a></span></h4>
+</div></span>
+        <h2 id='implementors' class='small-section-header'>
+          Implementors<a href='#implementors' class='anchor'></a>
+        </h2>
+        <ul class='item-list' id='implementors-list'>
+    <li><div class='out-of-band'><a class='srclink' href='../../../src/tox/toxcore/dht.rs.html#126-140' title='goto source code'>[src]</a></div><code>impl ToBytes for <a class="struct" href="../../../tox/toxcore/dht/struct.PingReq.html" title="struct tox::toxcore::dht::PingReq">PingReq</a></code></li>
+<li><div class='out-of-band'><a class='srclink' href='../../../src/tox/toxcore/dht.rs.html#126-140' title='goto source code'>[src]</a></div><code>impl ToBytes for <a class="struct" href="../../../tox/toxcore/dht/struct.PingResp.html" title="struct tox::toxcore::dht::PingResp">PingResp</a></code></li>
+<li><div class='out-of-band'><a class='srclink' href='../../../src/tox/toxcore/dht.rs.html#346-366' title='goto source code'>[src]</a></div><code>impl ToBytes for <a class="struct" href="../../../tox/toxcore/dht/struct.PackedNode.html" title="struct tox::toxcore::dht::PackedNode">PackedNode</a></code></li>
+<li><div class='out-of-band'><a class='srclink' href='../../../src/tox/toxcore/dht.rs.html#467-479' title='goto source code'>[src]</a></div><code>impl ToBytes for <a class="struct" href="../../../tox/toxcore/dht/struct.GetNodes.html" title="struct tox::toxcore::dht::GetNodes">GetNodes</a></code></li>
+<li><div class='out-of-band'><a class='srclink' href='../../../src/tox/toxcore/dht.rs.html#551-565' title='goto source code'>[src]</a></div><code>impl ToBytes for <a class="struct" href="../../../tox/toxcore/dht/struct.SendNodes.html" title="struct tox::toxcore::dht::SendNodes">SendNodes</a></code></li>
+<li><div class='out-of-band'><a class='srclink' href='../../../src/tox/toxcore/dht.rs.html#739-756' title='goto source code'>[src]</a></div><code>impl ToBytes for <a class="struct" href="../../../tox/toxcore/dht/struct.DhtPacket.html" title="struct tox::toxcore::dht::DhtPacket">DhtPacket</a></code></li>
+<li><div class='out-of-band'><a class='srclink' href='../../../src/tox/toxcore/dht.rs.html#1344-1357' title='goto source code'>[src]</a></div><code>impl ToBytes for <a class="struct" href="../../../tox/toxcore/dht/struct.NatPingReq.html" title="struct tox::toxcore::dht::NatPingReq">NatPingReq</a></code></li>
+<li><div class='out-of-band'><a class='srclink' href='../../../src/tox/toxcore/dht.rs.html#1344-1357' title='goto source code'>[src]</a></div><code>impl ToBytes for <a class="struct" href="../../../tox/toxcore/dht/struct.NatPingResp.html" title="struct tox::toxcore::dht::NatPingResp">NatPingResp</a></code></li>
+<li><div class='out-of-band'><a class='srclink' href='../../../src/tox/toxcore/state_format/old.rs.html#132-139' title='goto source code'>[src]</a></div><code>impl ToBytes for <a class="enum" href="../../../tox/toxcore/state_format/old/enum.SectionKind.html" title="enum tox::toxcore::state_format::old::SectionKind">SectionKind</a></code></li>
+<li><div class='out-of-band'><a class='srclink' href='../../../src/tox/toxcore/state_format/old.rs.html#297-305' title='goto source code'>[src]</a></div><code>impl ToBytes for <a class="struct" href="../../../tox/toxcore/state_format/old/struct.NospamKeys.html" title="struct tox::toxcore::state_format::old::NospamKeys">NospamKeys</a></code></li>
+<li><div class='out-of-band'><a class='srclink' href='../../../src/tox/toxcore/state_format/old.rs.html#404-435' title='goto source code'>[src]</a></div><code>impl ToBytes for <a class="struct" href="../../../tox/toxcore/state_format/old/struct.DhtState.html" title="struct tox::toxcore::state_format::old::DhtState">DhtState</a></code></li>
+<li><div class='out-of-band'><a class='srclink' href='../../../src/tox/toxcore/state_format/old.rs.html#568-572' title='goto source code'>[src]</a></div><code>impl ToBytes for <a class="enum" href="../../../tox/toxcore/state_format/old/enum.UserStatus.html" title="enum tox::toxcore::state_format::old::UserStatus">UserStatus</a></code></li>
+<li><div class='out-of-band'><a class='srclink' href='../../../src/tox/toxcore/state_format/old.rs.html#668-722' title='goto source code'>[src]</a></div><code>impl ToBytes for <a class="struct" href="../../../tox/toxcore/state_format/old/struct.FriendState.html" title="struct tox::toxcore::state_format::old::FriendState">FriendState</a></code></li>
+<li><div class='out-of-band'><a class='srclink' href='../../../src/tox/toxcore/state_format/old.rs.html#798-806' title='goto source code'>[src]</a></div><code>impl ToBytes for <a class="struct" href="../../../tox/toxcore/state_format/old/struct.Friends.html" title="struct tox::toxcore::state_format::old::Friends">Friends</a></code></li>
+<li><div class='out-of-band'><a class='srclink' href='../../../src/tox/toxcore/state_format/old.rs.html#818-822' title='goto source code'>[src]</a></div><code>impl ToBytes for <a class="struct" href="../../../tox/toxcore/state_format/old/struct.Name.html" title="struct tox::toxcore::state_format::old::Name">Name</a></code></li>
+<li><div class='out-of-band'><a class='srclink' href='../../../src/tox/toxcore/state_format/old.rs.html#818-822' title='goto source code'>[src]</a></div><code>impl ToBytes for <a class="struct" href="../../../tox/toxcore/state_format/old/struct.StatusMsg.html" title="struct tox::toxcore::state_format::old::StatusMsg">StatusMsg</a></code></li>
+<li><div class='out-of-band'><a class='srclink' href='../../../src/tox/toxcore/state_format/old.rs.html#943-952' title='goto source code'>[src]</a></div><code>impl ToBytes for <a class="struct" href="../../../tox/toxcore/state_format/old/struct.TcpRelays.html" title="struct tox::toxcore::state_format::old::TcpRelays">TcpRelays</a></code></li>
+<li><div class='out-of-band'><a class='srclink' href='../../../src/tox/toxcore/state_format/old.rs.html#943-952' title='goto source code'>[src]</a></div><code>impl ToBytes for <a class="struct" href="../../../tox/toxcore/state_format/old/struct.PathNodes.html" title="struct tox::toxcore::state_format::old::PathNodes">PathNodes</a></code></li>
+<li><div class='out-of-band'><a class='srclink' href='../../../src/tox/toxcore/state_format/old.rs.html#1263-1305' title='goto source code'>[src]</a></div><code>impl ToBytes for <a class="struct" href="../../../tox/toxcore/state_format/old/struct.State.html" title="struct tox::toxcore::state_format::old::State">State</a></code></li>
+<li><div class='out-of-band'><a class='srclink' href='../../../src/tox/toxcore/toxid.rs.html#289-298' title='goto source code'>[src]</a></div><code>impl ToBytes for <a class="struct" href="../../../tox/toxcore/toxid/struct.ToxId.html" title="struct tox::toxcore::toxid::ToxId">ToxId</a></code></li>
+</ul><script type="text/javascript" async
+                         src="../../../implementors/tox/toxcore/binary_io/trait.ToBytes.js">
+                 </script></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>↑</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>↓</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>↹</dt>
+                    <dd>Switch tab</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt style="width:31px;">+ / -</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../../../";
+        window.currentCrate = "tox";
+    </script>
+    <script src="../../../main.js"></script>
+    <script defer src="../../../search-index.js"></script>
+</body>
+</html>

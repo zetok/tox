@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["PackedNode","`PackedNode` format is a way to store the node info in a small yet easy to parse format."]]});

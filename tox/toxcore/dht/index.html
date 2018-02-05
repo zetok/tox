@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `dht` mod in crate `tox`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, dht">
+
+    <title>tox::toxcore::dht - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../../../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../../../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../../../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc mod">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
+        
+        <p class='location'>Module dht</p><div class="sidebar-elems"><div class="block items"><ul><li><a href="#structs">Structs</a></li><li><a href="#enums">Enums</a></li><li><a href="#constants">Constants</a></li><li><a href="#traits">Traits</a></li><li><a href="#functions">Functions</a></li></ul></div><p class='location'><a href='../../index.html'>tox</a>::<wbr><a href='../index.html'>toxcore</a></p><script>window.sidebarCurrent = {name: 'dht', ty: 'mod', relpath: '../'};</script><script defer src="../sidebar-items.js"></script></div>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Module <a href='../../index.html'>tox</a>::<wbr><a href='../index.html'>toxcore</a>::<wbr><a class="mod" href=''>dht</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../../../src/tox/toxcore/dht.rs.html#23-1903' title='goto source code'>[src]</a></span></h1>
+<div class='docblock'><p>DHT part of the toxcore.</p>
+
+<ul>
+<li>takes care of the serializing and de-serializing DHT packets</li>
+<li>..</li>
+</ul>
+</div><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.Bucket.html"
+                                  title='struct tox::toxcore::dht::Bucket'>Bucket</a></td>
+                           <td class='docblock-short'>
+                                <p>Structure for holding nodes.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.BucketIter.html"
+                                  title='struct tox::toxcore::dht::BucketIter'>BucketIter</a></td>
+                           <td class='docblock-short'>
+                                <p>Iterator over <code>Bucket</code>.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.DhtPacket.html"
+                                  title='struct tox::toxcore::dht::DhtPacket'>DhtPacket</a></td>
+                           <td class='docblock-short'>
+                                <p>Standard DHT packet that encapsulates in the encrypted payload
+<a href="./trait.DhtPacketT.html"><code>DhtPacketT</code></a>.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.DhtRequest.html"
+                                  title='struct tox::toxcore::dht::DhtRequest'>DhtRequest</a></td>
+                           <td class='docblock-short'>
+                                <p>DHT Request packet structure.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.GetNodes.html"
+                                  title='struct tox::toxcore::dht::GetNodes'>GetNodes</a></td>
+                           <td class='docblock-short'>
+                                <p>Request to get address of given DHT PK, or nodes that are closest in DHT
+to the given PK.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.Kbucket.html"
+                                  title='struct tox::toxcore::dht::Kbucket'>Kbucket</a></td>
+                           <td class='docblock-short'>
+                                <p>K-buckets structure to hold up to
+<a href="./constant.KBUCKET_MAX_ENTRIES.html"><code>KBUCKET_MAX_ENTRIES</code></a> *
+<a href="./constant.BUCKET_DEFAULT_SIZE.html"><code>BUCKET_DEFAULT_SIZE</code></a> nodes close to
+own PK.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.KbucketIter.html"
+                                  title='struct tox::toxcore::dht::KbucketIter'>KbucketIter</a></td>
+                           <td class='docblock-short'>
+                                <p>Iterator over <code>PackedNode</code>s in <code>Kbucket</code>.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.NatPingReq.html"
+                                  title='struct tox::toxcore::dht::NatPingReq'>NatPingReq</a></td>
+                           <td class='docblock-short'>
+                                <p>NAT Ping; used to see if a friend we are not connected to directly
+is online and ready to do the hole punching.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.NatPingResp.html"
+                                  title='struct tox::toxcore::dht::NatPingResp'>NatPingResp</a></td>
+                           <td class='docblock-short'>
+                                <p>NAT Ping; used to see if a friend we are not connected to directly
+is online and ready to do the hole punching.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.PackedNode.html"
+                                  title='struct tox::toxcore::dht::PackedNode'>PackedNode</a></td>
+                           <td class='docblock-short'>
+                                <p><code>PackedNode</code> format is a way to store the node info in a small yet easy to
+parse format.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.PingReq.html"
+                                  title='struct tox::toxcore::dht::PingReq'>PingReq</a></td>
+                           <td class='docblock-short'>
+                                <p>Used to request/respond to ping. Use in an encrypted form.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.PingResp.html"
+                                  title='struct tox::toxcore::dht::PingResp'>PingResp</a></td>
+                           <td class='docblock-short'>
+                                <p>Used to request/respond to ping. Use in an encrypted form.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.SendNodes.html"
+                                  title='struct tox::toxcore::dht::SendNodes'>SendNodes</a></td>
+                           <td class='docblock-short'>
+                                <p>Response to <a href="./struct.GetNodes.html"><code>GetNodes</code></a> request, containing up to
+<code>4</code> nodes closest to the requested node.</p>
+                           </td>
+                       </tr></table><h2 id='enums' class='section-header'><a href="#enums">Enums</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class="enum" href="enum.IpType.html"
+                                  title='enum tox::toxcore::dht::IpType'>IpType</a></td>
+                           <td class='docblock-short'>
+                                <p>Used by <a href="./struct.PackedNode.html"><code>PackedNode</code></a>.</p>
+                           </td>
+                       </tr></table><h2 id='constants' class='section-header'><a href="#constants">Constants</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.BUCKET_DEFAULT_SIZE.html"
+                                  title='constant tox::toxcore::dht::BUCKET_DEFAULT_SIZE'>BUCKET_DEFAULT_SIZE</a></td>
+                           <td class='docblock-short'>
+                                <p>Default number of nodes that bucket can hold.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.DHT_PACKET_MIN_SIZE.html"
+                                  title='constant tox::toxcore::dht::DHT_PACKET_MIN_SIZE'>DHT_PACKET_MIN_SIZE</a></td>
+                           <td class='docblock-short'>
+                                <p>Minimal size of <a href="./struct.DhtPacket.html"><code>DhtPacket</code></a> in bytes.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.GET_NODES_SIZE.html"
+                                  title='constant tox::toxcore::dht::GET_NODES_SIZE'>GET_NODES_SIZE</a></td>
+                           <td class='docblock-short'>
+                                <p>Size of serialized <a href="./struct.GetNodes.html"><code>GetNodes</code></a> in bytes.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.KBUCKET_BUCKETS.html"
+                                  title='constant tox::toxcore::dht::KBUCKET_BUCKETS'>KBUCKET_BUCKETS</a></td>
+                           <td class='docblock-short'>
+                                <p>Default number of <a href="./struct.Bucket.html"><code>Bucket</code></a>s that <a href="./struct.Kbucket.html"><code>Kbucket</code></a> holds.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.KBUCKET_MAX_ENTRIES.html"
+                                  title='constant tox::toxcore::dht::KBUCKET_MAX_ENTRIES'>KBUCKET_MAX_ENTRIES</a></td>
+                           <td class='docblock-short'>
+                                <p>Maximum number of <a href="./struct.Bucket.html"><code>Bucket</code></a>s that <a href="./struct.Kbucket.html"><code>Kbucket</code></a> can hold.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.NAT_PING_SIZE.html"
+                                  title='constant tox::toxcore::dht::NAT_PING_SIZE'>NAT_PING_SIZE</a></td>
+                           <td class='docblock-short'>
+                                <p>Length in bytes of NatPings when serialized into bytes.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.NAT_PING_TYPE.html"
+                                  title='constant tox::toxcore::dht::NAT_PING_TYPE'>NAT_PING_TYPE</a></td>
+                           <td class='docblock-short'>
+                                <p><code>NatPing</code> type byte for <a href="./struct.PingReq.html"><code>NatPingReq</code></a> and <a href="./struct.PingResp.html"><code>NatPingResp</code></a>.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.PACKED_NODE_IPV4_SIZE.html"
+                                  title='constant tox::toxcore::dht::PACKED_NODE_IPV4_SIZE'>PACKED_NODE_IPV4_SIZE</a></td>
+                           <td class='docblock-short'>
+                                <p>Size in bytes of serialized <a href="./struct.PackedNode.html"><code>PackedNode</code></a> with
+IPv4.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.PACKED_NODE_IPV6_SIZE.html"
+                                  title='constant tox::toxcore::dht::PACKED_NODE_IPV6_SIZE'>PACKED_NODE_IPV6_SIZE</a></td>
+                           <td class='docblock-short'>
+                                <p>Size in bytes of serialized <a href="./struct.PackedNode.html"><code>PackedNode</code></a> with
+IPv6.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.PING_SIZE.html"
+                                  title='constant tox::toxcore::dht::PING_SIZE'>PING_SIZE</a></td>
+                           <td class='docblock-short'>
+                                <p>Length in bytes of <a href="./struct.PingReq.html"><code>PingReq</code></a> and
+<a href="./struct.PingResp.html"><code>PingResp</code></a> when serialized into bytes.</p>
+                           </td>
+                       </tr></table><h2 id='traits' class='section-header'><a href="#traits">Traits</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class="trait" href="trait.DhtPacketT.html"
+                                  title='trait tox::toxcore::dht::DhtPacketT'>DhtPacketT</a></td>
+                           <td class='docblock-short'>
+                                <p>Trait for types of DHT packets that can be put in <a href="./struct.DhtPacket.html"><code>DhtPacket</code></a>.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="trait" href="trait.DhtRequestT.html"
+                                  title='trait tox::toxcore::dht::DhtRequestT'>DhtRequestT</a></td>
+                           <td class='docblock-short'>
+                                <p>Trait for types of DHT requests that can be put in <a href="./struct.DhtRequest.html"><code>DhtRequest</code></a>.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="trait" href="trait.Distance.html"
+                                  title='trait tox::toxcore::dht::Distance'>Distance</a></td>
+                           <td class='docblock-short'>
+                                <p>Trait for functionality related to distance between <code>PublicKey</code>s.</p>
+                           </td>
+                       </tr></table><h2 id='functions' class='section-header'><a href="#functions">Functions</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class="fn" href="fn.kbucket_index.html"
+                                  title='fn tox::toxcore::dht::kbucket_index'>kbucket_index</a></td>
+                           <td class='docblock-short'>
+                                <p>Calculate the <a href="./struct.Kbucket.html"><code>k-bucket</code></a> index of a PK compared
+to &quot;own&quot; PK.</p>
+                           </td>
+                       </tr></table></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>↑</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>↓</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>↹</dt>
+                    <dd>Switch tab</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt style="width:31px;">+ / -</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../../../";
+        window.currentCrate = "tox";
+    </script>
+    <script src="../../../main.js"></script>
+    <script defer src="../../../search-index.js"></script>
+</body>
+</html>

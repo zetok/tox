@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `Server` struct in crate `tox`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, Server">
+
+    <title>tox::toxcore::tcp::server::Server - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../../../../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../../../../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../../../../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc struct">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
+        
+        <p class='location'>Struct Server</p><div class="sidebar-elems"><div class="block items"><a class="sidebar-title" href="#methods">Methods</a><div class="sidebar-links"><a href="#method.new">new</a><a href="#method.insert">insert</a><a href="#method.handle_packet">handle_packet</a><a href="#method.shutdown_client">shutdown_client</a></div><a class="sidebar-title" href="#implementations">Trait Implementations</a><div class="sidebar-links"><a href="#impl-Clone">Clone</a></div></div><p class='location'><a href='../../../index.html'>tox</a>::<wbr><a href='../../index.html'>toxcore</a>::<wbr><a href='../index.html'>tcp</a>::<wbr><a href='index.html'>server</a></p><script>window.sidebarCurrent = {name: 'Server', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script></div>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Struct <a href='../../../index.html'>tox</a>::<wbr><a href='../../index.html'>toxcore</a>::<wbr><a href='../index.html'>tcp</a>::<wbr><a href='index.html'>server</a>::<wbr><a class="struct" href=''>Server</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../../../../src/tox/toxcore/tcp/server/server.rs.html#47-49' title='goto source code'>[src]</a></span></h1>
+<pre class='rust struct'>pub struct Server { /* fields omitted */ }</pre><div class='docblock'><p>A <code>Server</code> is a structure that holds connected clients, manages their links and handles
+their responses. Notice that there is no actual network code here, the <code>Server</code> accepts packets
+by value from <code>Server::handle_packet</code>, sends packets back to clients via
+<code>futures::sync::mpsc::UnboundedSender&lt;Packet&gt;</code> channel. The outer code should manage how to handshake
+connections, get packets from clients, pass them into <code>Server::handle_packet</code>,
+create <code>mpsc</code> chanel, take packets from <code>futures::sync::mpsc::UnboundedReceiver&lt;Packet&gt;</code> send them back
+to clients via network.</p>
+</div>
+                    <h2 id='methods' class='small-section-header'>
+                      Methods<a href='#methods' class='anchor'></a>
+                    </h2>
+                <h3 id='impl' class='impl'><span class='in-band'><code>impl <a class="struct" href="../../../../tox/toxcore/tcp/server/struct.Server.html" title="struct tox::toxcore::tcp::server::Server">Server</a></code><a href='#impl' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../../src/tox/toxcore/tcp/server/server.rs.html#51-322' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.new' class="method"><span id='new.v' class='invisible'><code>pub fn <a href='#method.new' class='fnname'>new</a>() -&gt; <a class="struct" href="../../../../tox/toxcore/tcp/server/struct.Server.html" title="struct tox::toxcore::tcp::server::Server">Server</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../../src/tox/toxcore/tcp/server/server.rs.html#54-58' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Create a new <code>Server</code></p>
+</div><h4 id='method.insert' class="method"><span id='insert.v' class='invisible'><code>pub fn <a href='#method.insert' class='fnname'>insert</a>(&amp;self, client: <a class="struct" href="../../../../tox/toxcore/tcp/server/struct.Client.html" title="struct tox::toxcore::tcp::server::Client">Client</a>)</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../../src/tox/toxcore/tcp/server/server.rs.html#61-64' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Insert the client into connected_clients. Do nothing else.</p>
+</div><h4 id='method.handle_packet' class="method"><span id='handle_packet.v' class='invisible'><code>pub fn <a href='#method.handle_packet' class='fnname'>handle_packet</a>(&amp;self, pk: &amp;<a class="struct" href="../../../../sodiumoxide/crypto/box_/curve25519xsalsa20poly1305/struct.PublicKey.html" title="struct sodiumoxide::crypto::box_::curve25519xsalsa20poly1305::PublicKey">PublicKey</a>, packet: <a class="enum" href="../../../../tox/toxcore/tcp/packet/enum.Packet.html" title="enum tox::toxcore::tcp::packet::Packet">Packet</a>) -&gt; <a class="type" href="../../../../tokio_io/type.IoFuture.html" title="type tokio_io::IoFuture">IoFuture</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../../src/tox/toxcore/tcp/server/server.rs.html#68-80' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>The main processing function. Call in on each incoming packet from connected and
+handshaked client.</p>
+</div><h4 id='method.shutdown_client' class="method"><span id='shutdown_client.v' class='invisible'><code>pub fn <a href='#method.shutdown_client' class='fnname'>shutdown_client</a>(&amp;self, pk: &amp;<a class="struct" href="../../../../sodiumoxide/crypto/box_/curve25519xsalsa20poly1305/struct.PublicKey.html" title="struct sodiumoxide::crypto::box_::curve25519xsalsa20poly1305::PublicKey">PublicKey</a>) -&gt; <a class="type" href="../../../../tokio_io/type.IoFuture.html" title="type tokio_io::IoFuture">IoFuture</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../../src/tox/toxcore/tcp/server/server.rs.html#85-113' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Gracefully shutdown client by pk. Remove it from the list of connected clients.
+If there are any clients mutually linked to current client, we send them corresponding
+DisconnectNotification.</p>
+</div></div>
+            <h2 id='implementations' class='small-section-header'>
+              Trait Implementations<a href='#implementations' class='anchor'></a>
+            </h2>
+        <h3 id='impl-Clone' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html" title="trait core::clone::Clone">Clone</a> for <a class="struct" href="../../../../tox/toxcore/tcp/server/struct.Server.html" title="struct tox::toxcore::tcp::server::Server">Server</a></code><a href='#impl-Clone' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../../src/tox/toxcore/tcp/server/server.rs.html#46' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.clone' class="method"><span id='clone.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class="struct" href="../../../../tox/toxcore/tcp/server/struct.Server.html" title="struct tox::toxcore::tcp::server::Server">Server</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../../src/tox/toxcore/tcp/server/server.rs.html#46' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Returns a copy of the value. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone">Read more</a></p>
+</div><h4 id='method.clone_from' class="method"><span id='clone_from.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;</a>Self)</code></span><span class='out-of-band'><div class='ghost'></div><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div><a class='srclink' href='https://doc.rust-lang.org/nightly/src/core/clone.rs.html#112-114' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Performs copy-assignment from <code>source</code>. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from">Read more</a></p>
+</div></div></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>↑</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>↓</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>↹</dt>
+                    <dd>Switch tab</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt style="width:31px;">+ / -</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../../../../";
+        window.currentCrate = "tox";
+    </script>
+    <script src="../../../../main.js"></script>
+    <script defer src="../../../../search-index.js"></script>
+</body>
+</html>

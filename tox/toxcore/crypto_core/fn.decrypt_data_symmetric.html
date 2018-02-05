@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `decrypt_data_symmetric` fn in crate `tox`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, decrypt_data_symmetric">
+
+    <title>tox::toxcore::crypto_core::decrypt_data_symmetric - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../../../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../../../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../../../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc fn">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
+        
+        <p class='location'><a href='../../index.html'>tox</a>::<wbr><a href='../index.html'>toxcore</a>::<wbr><a href='index.html'>crypto_core</a></p><script>window.sidebarCurrent = {name: 'decrypt_data_symmetric', ty: 'fn', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Function <a href='../../index.html'>tox</a>::<wbr><a href='../index.html'>toxcore</a>::<wbr><a href='index.html'>crypto_core</a>::<wbr><a class="fn" href=''>decrypt_data_symmetric</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../../../src/tox/toxcore/crypto_core.rs.html#153-157' title='goto source code'>[src]</a></span></h1>
+<pre class='rust fn'>pub fn decrypt_data_symmetric(<br>&nbsp;&nbsp;&nbsp;&nbsp;precomputed_key: &amp;<a class="struct" href="../../../sodiumoxide/crypto/box_/curve25519xsalsa20poly1305/struct.PrecomputedKey.html" title="struct sodiumoxide::crypto::box_::curve25519xsalsa20poly1305::PrecomputedKey">PrecomputedKey</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;nonce: &amp;<a class="struct" href="../../../sodiumoxide/crypto/box_/curve25519xsalsa20poly1305/struct.Nonce.html" title="struct sodiumoxide::crypto::box_::curve25519xsalsa20poly1305::Nonce">Nonce</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;encrypted: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">]</a><br>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html" title="struct alloc::vec::Vec">Vec</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a>&gt;, <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>&gt;</pre><div class='docblock'><p>Returns plain data from <code>encrypted</code>, with length of <code>encrypted - 16</code> due to
+padding, or <code>()</code> if data couldn&#39;t be decrypted.</p>
+
+<p>Decryption is done using precomputed key (from the secret key of receiver
+and the public key of sender) and a 24 byte nonce.</p>
+
+<p><code>sodiumoxide</code> takes care of removing padding from the data, so the
+resulting plain data has length of <code>encrypted - 16</code>.</p>
+
+<p>This function is a wrapper for the
+<a href="../../../sodiumoxide/crypto/box_/curve25519xsalsa20poly1305/fn.open_precomputed.html"><code>open_precomputed()</code></a>
+function from <code>sodiumoxide</code>.</p>
+</div></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>↑</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>↓</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>↹</dt>
+                    <dd>Switch tab</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt style="width:31px;">+ / -</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../../../";
+        window.currentCrate = "tox";
+    </script>
+    <script src="../../../main.js"></script>
+    <script defer src="../../../search-index.js"></script>
+</body>
+</html>
